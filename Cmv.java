@@ -34,7 +34,36 @@ public class Cmv {
     private static boolean lic8()  { return false; }
     private static boolean lic9()  { return false; }
     private static boolean lic10() { return false; }
-    private static boolean lic11() { return false; }
+
+    /**
+     * Exists at least one set of two data points (X[i], Y[i]) and (X[j], Y[j]),
+     * separated by exactly G_PTS such that X[j] - X[i] < 0
+     *
+     * Condition not met when:       NUMPOINTS < 3
+     * Condition met when:           1 <= G_PTS <= NUMPOINTS - 2
+     *
+     * @return true if condition met, false otherwise.
+     */
+    private static boolean lic11() {
+        if (Main.NUMPOINTS < 3) {
+            return false;
+        }
+
+        int g = Main.PARAMETERS.G_PTS;
+
+        if (g < 1 || g > Main.NUMPOINTS - 2) {
+            return false;
+        }
+
+        int step = g + 1;
+        for (int i = 0; i + step < Main.NUMPOINTS; i++) {
+            int j = i + step;
+            if (Main.X[j] < Main.X[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
     private static boolean lic12() { return false; }
     private static boolean lic13() { return false; }
     private static boolean lic14() { return false; }
