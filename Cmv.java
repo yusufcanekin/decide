@@ -33,6 +33,17 @@ public class Cmv {
     private static boolean lic7()  { return false; }
     private static boolean lic8()  { return false; }
 
+
+/**
+ * Evaluates Launch Interceptor Condition (LIC) 9.
+ * Checks if there exists at least one set of three data points separated by exactly 
+ * C_PTS and D_PTS consecutive intervening points, respectively, that form an angle 
+ * such that angle < (PI - EPSILON) or angle > (PI + EPSILON).
+ * The second point is the vertex of the angle. If the first or last point 
+ * coincides with the vertex, the condition is not satisfied for that set.
+ * @return true if the condition is met, false otherwise.
+ */
+
     private static boolean lic9()  { 
         int cpts= Main.PARAMETERS.C_PTS;
         int dpts = Main.PARAMETERS.D_PTS;
@@ -65,6 +76,13 @@ public class Cmv {
     return false; 
     }
 
+    /**
+    * Calculates the angle (in radians) between three points where (x2, y2) is the vertex.
+    * @param x1, y1 Coordinates of the first point.
+    * @param x2, y2 Coordinates of the vertex point.
+    * @param x3, y3 Coordinates of the third point.
+    * @return The angle in radians between 0 and PI.
+    */
     private static double calculateAngle(double x1, double y1, double x2, double y2, double x3, double y3) {
     double v1x = x1 - x2;
     double v1y = y1 - y2;
