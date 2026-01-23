@@ -4,14 +4,16 @@ import org.junit.runner.Result;
 import static org.junit.Assert.*;
 
 public class CMVTest {
-
+    /**
+     * Asserts true for:
+     * - Input contains at least two points
+     * - There exists one pair of consecutive points
+     * - The distance between that pair is strictly greater than LENGTH1 
+     */
     @Test
     public void testLic0BasicTrueCases() {
-        //Input contains at least two points
-        //There exists one pair of consecutive points
-        //The distance between that pair is strictly greater than LENGTH1 
-        Main.Parameters lic = new Main.Parameters();
-        lic.LENGTH1 = 5.0;
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.LENGTH1 = 5.0;
         
         Main.X = new double[] {0.0, 6.0, 10.0};
         Main.Y = new double[] {0.0, 0.0, 0.0};
@@ -20,11 +22,15 @@ public class CMVTest {
         assertTrue(cmv[0]);
 
     }
+    /**
+     * Asserts false for:
+     * - Input contains multiple points
+     * - All consecutive distances are less than or equal to LENGTH1
+     */
+    @Test
     public void testLic0BasicFalseCases() {
-        //Input contains multiple points
-        //All consecutive distances are less than or equal to LENGTH1
-        Main.Parameters lic = new Main.Parameters();
-        lic.LENGTH1 = 5.0;  
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.LENGTH1 = 5.0;  
 
         Main.X = new double[] {0.0, 1.0, 3.0};
         Main.Y = new double[] {0.0, 1.0, 3.0};
@@ -32,11 +38,15 @@ public class CMVTest {
 
         assertFalse(cmv[0]);   
     }
+    /**
+     * Asserts false for:
+     * - Input containing at least two points
+     * - Distance between pair is exactly equal to LENGTH1
+     */
+    @Test
     public void testLic0BoundaryCase() {
-        //At least one pair of consecutive points
-        //The distance between that pair is exactly equal to LENGTH1
-        Main.Parameters lic = new Main.Parameters();
-        lic.LENGTH1 = 5.0;
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.LENGTH1 = 5.0;
 
         Main.X = new double[] {0.0, 3.0};
         Main.Y = new double[] {0.0, 4.0};
@@ -44,10 +54,16 @@ public class CMVTest {
         
         assertFalse(cmv[0]);
     }
+
+    /**
+     * Asserts false for:
+     * - Input containing less than two points 
+     */
+    @Test
     public void testLic0EdgeCase() {
         //Input contains less than two points
-        Main.Parameters lic = new Main.Parameters();
-        lic.LENGTH1 = 5.0;
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.LENGTH1 = 5.0;
 
         Main.X = new double[] {0.0};
         Main.Y = new double[] {0.0};
@@ -55,21 +71,29 @@ public class CMVTest {
 
         assertFalse(cmv[0]);
     }
+    /**
+     * Asserts false for:
+     * - LENGTH1 equal to zero
+     */
+    @Test
     public void testLic0ZeroLength() {
         //LENGTH1 is zero
-        Main.Parameters lic = new Main.Parameters();
-        lic.LENGTH1 = 0.0;
-
-        Main.X = new double[] {0.0, 0.0};
-        Main.Y = new double[] {0.0, 0.0};   
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.LENGTH1 = 0.0;  
+              
         boolean[] cmv = Cmv.computeCMV();
 
-        assertTrue(cmv[0]);
+        assertFalse(cmv[0]);
     }
+    /**
+     * Asserts false for:
+     * - Only identical points
+     */
+    @Test
     public void testLic0IdenticalPoints() {
         //Only identical points
-        Main.Parameters lic = new Main.Parameters();
-        lic.LENGTH1 = 5.0;
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.LENGTH1 = 5.0;
 
         Main.X = new double[] {1.0, 1.0, 1.0};
         Main.Y = new double[] {1.0, 1.0, 1.0};
