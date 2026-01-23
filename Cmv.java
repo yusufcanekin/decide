@@ -36,7 +36,7 @@ public class Cmv {
     private static boolean lic10() { return false; }
 
     /**
-     * Exists at least one set of two data points (X[i], Y[i]) and (X[j], Y[j]),
+     * There exists at least one set of two data points (X[i], Y[i]) and (X[j], Y[j]),
      * separated by exactly G_PTS such that X[j] - X[i] < 0
      *
      * Condition not met when:       NUMPOINTS < 3
@@ -64,7 +64,64 @@ public class Cmv {
         }
         return false;
     }
-    private static boolean lic12() { return false; }
+
+    /**
+     * There exists at least one set of two data points, separated by exactly K_PTS,
+     * which are more than LENGTH1 apart.
+     * Additionally, there exists at least one set of two data points, (same or different),
+     * separated by exactly K_PTS, which are less than LENGTH2 apart.
+     * 
+     * Condition not met when:       NUMPOINTS < 3
+     * Condition met when:           0 <= LENGTH2
+     * @return
+     */
+    private static boolean lic12() {
+        // Condition not met when NUMPOINTS < 3
+        if (Main.NUMPOINTS < 3) {
+            return false;
+        }
+
+        int k = Main.PARAMETERS.K_PTS;
+        double length1 = Main.PARAMETERS.LENGTH1;
+        double length2 = Main.PARAMETERS.LENGTH2;
+
+        // Parameter constraints
+        if (length2 < 0 || k < 1 || k > Main.NUMPOINTS - 2) {
+            return false;
+        }
+
+        int step = k + 1;
+
+        boolean foundGreaterThanL1 = false;
+        boolean foundLessThanL2 = false;
+
+        for (int i = 0; i + step < Main.NUMPOINTS; i++) {
+            int j = i + step;
+
+            double dx = Main.X[j] - Main.X[i];
+            double dy = Main.Y[j] - Main.Y[i];
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance > length1) {
+                foundGreaterThanL1 = true;
+            }
+            if (distance < length2) {
+                foundLessThanL2 = true;
+            }
+
+            // Exits when both conditions are met.
+            if (foundGreaterThanL1 && foundLessThanL2) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 
+     * @return
+     */
     private static boolean lic13() { return false; }
     private static boolean lic14() { return false; }
 }
