@@ -32,7 +32,58 @@ public class Cmv {
     private static boolean lic6()  { return false; }
     private static boolean lic7()  { return false; }
     private static boolean lic8()  { return false; }
-    private static boolean lic9()  { return false; }
+
+    private static boolean lic9()  { 
+        int cpts= Main.PARAMETERS.C_PTS;
+        int dpts = Main.PARAMETERS.D_PTS;
+        int np = Main.NUMPOINTS;
+
+        if (np<5){
+            return false ;
+        }
+
+        if(1>cpts || 1>dpts || (cpts+dpts > np -3) ){
+            return false; 
+        }
+
+        for(int i =0 ; i < np-cpts-dpts-2;i++){
+
+            int firstIdx = i;
+            int middleIdx = i + cpts + 1; 
+            int lastIdx = middleIdx + dpts + 1; 
+
+            double x1 = Main.X[firstIdx], y1 = Main.Y[firstIdx];
+            double x2 = Main.X[middleIdx], y2 = Main.Y[middleIdx];
+            double x3 = Main.X[lastIdx], y3 = Main.Y[lastIdx];
+
+             double angle=calculateAngle(x1,y1,x2,y2,x3,y3);
+             if(angle < Math.PI-EPSILON || angle < Math.PI+EPSILON){
+                    return true;
+             }
+        }
+        
+    return false; 
+    }
+
+    private static double calculateAngle(double x1, double y1, double x2, double y2, double x3, double y3) {
+    double v1x = x1 - x2;
+    double v1y = y1 - y2;
+    double v2x = x3 - x2;
+    double v2y = y3 - y2;
+
+    double dotProduct = (v1x * v2x) + (v1y * v2y);
+    double mag1 = Math.sqrt(v1x * v1x + v1y * v1y);
+    double mag2 = Math.sqrt(v2x * v2x + v2y * v2y);
+
+    double cosTheta = dotProduct / (mag1 * mag2);
+
+    cosTheta = Math.max(-1.0, Math.min(1.0, cosTheta));
+
+    return Math.acos(cosTheta);
+
+    }
+
+
     private static boolean lic10() { return false; }
     private static boolean lic11() { return false; }
     private static boolean lic12() { return false; }
