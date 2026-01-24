@@ -220,7 +220,7 @@ public class CMVTest {
      * that lie in more than QUADS quadrants.
      */
     @Test
-    public void lic4_positive_moreThanQuadsQuadrantsExists() {
+    public void testLic4_positive_moreThanQuadsQuadrantsExists() {
         Main.NUMPOINTS = 4;
         Main.X = new double[]{ 1, -1, -1,  1};
         Main.Y = new double[]{ 1,  1, -1, -1}; // I, II, III, IV
@@ -238,7 +238,7 @@ public class CMVTest {
      * the number of distinct quadrants is <= QUADS.
      */
     @Test
-    public void lic4_negative_notMoreThanQuadsQuadrants() {
+    public void testLic4_negative_notMoreThanQuadsQuadrants() {
         Main.NUMPOINTS = 4;
         Main.X = new double[]{ 0,  1,  2,  3};
         Main.Y = new double[]{ 0,  0,  1,  2}; // (0,0)->I, (1,0)->I, (2,1)->I, (3,2)->I
@@ -255,7 +255,7 @@ public class CMVTest {
      * LIC 4 should return false when NUMPOINTS < Q_PTS (invalid).
      */
     @Test
-    public void lic4_invalidInput_numPointsLessThanQpts() {
+    public void testLic4_invalidInput_numPointsLessThanQpts() {
         Main.NUMPOINTS = 3;
         Main.X = new double[]{ 1, -1, 0};
         Main.Y = new double[]{ 1,  1, 0};
