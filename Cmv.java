@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 public class Cmv {
     public static double EPSILON = 0.01;
     public static boolean[] computeCMV() {
@@ -146,7 +148,46 @@ public class Cmv {
             return (a * b * c) / (4 * triangleArea);
         }
     
-    private static boolean lic2()  { return false; }
+    private static boolean lic2()  { 
+        if (Main.X.length < 3) {
+            return false;
+        }
+
+        for (int i = 0; i < Main.X.length - 2; i++) {
+            double x0 = Main.X[i];
+            double y0 = Main.Y[i];
+            double x1 = Main.X[i+1];
+            double y1 = Main.Y[i+1];
+            double x2 = Main.X[i+2];
+            double y2 = Main.Y[i+2];
+
+            double angle = calculateAngle(x0, y0, x1, y1, x2, y2);
+
+            if ((angle < Main.PARAMETERS.PI - Main.PARAMETERS.EPSILON || angle > Main.PARAMETERS.PI + Main.PARAMETERS.EPSILON) && angle != -1) {
+                return true;
+            }
+        }
+
+        return false; 
+    }
+        
+        private static double calculateAngle(double x0, double y0,
+                                            double x1, double y1,
+                                            double x2, double y2) {
+
+            double d01 = Math.hypot(x1 - x0, y1 - y0);
+            double d02 = Math.hypot(x2 - x0, y2 - y0);
+
+            if (Math.abs(d01) < 1e-10 ||  Math.abs(d02) < 1e-10) {
+                return -1;
+            }
+            else {
+                double angle = Math.atan2(d01, d02);
+                return angle;
+            }
+        }
+    
+       
     private static boolean lic3()  { return false; }
     private static boolean lic4()  { return false; }
     private static boolean lic5()  { return false; }
