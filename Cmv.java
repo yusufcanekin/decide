@@ -33,7 +33,25 @@ public class Cmv {
     private static boolean lic7()  { return false; }
     private static boolean lic8()  { return false; }
     private static boolean lic9()  { return false; }
-    private static boolean lic10() { return false; }
+    private static boolean lic10() { 
+        int num=Main.NUMPOINTS;
+        double epts= Main.PARAMETERS.E_PTS;
+        double fpts=Main.PARAMETERS.F_PTS;
+
+        if(num<5){
+            return false;
+
+        }
+        if(1>epts || 1>fpts || epts+fpts>num-3){
+
+            return false;
+
+        }
+        
+        
+        return false; 
+    
+    }
     private static boolean lic11() { return false; }
     private static boolean lic12() { return false; }
     private static boolean lic13() { return false; }
