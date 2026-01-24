@@ -268,6 +268,48 @@ public class CMVTest {
         assertFalse("LIC 4 should be false when NUMPOINTS < Q_PTS.", cmv[4]);
     }
 
+    /**
+     * LIC 5 should return true if there exists at least one pair of
+     * consecutive points such that X[i+1] - X[i] < 0.
+     */
+    @Test
+    public void lic5_positive_decreasingXExists() {
+        Main.NUMPOINTS = 3;
+        Main.X = new double[]{3.0, 1.0, 2.0}; // 1.0 - 3.0 < 0 (true)
+        Main.Y = new double[]{0.0, 0.0, 0.0};
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertTrue("LIC 5 should be true when there exists at least one pair meeting the condition X[i+1] - X[i] < 0.", cmv[5]);
+    }
+
+    /**
+     * LIC 5 should return false if for all consecutive pairs,
+     * X[i+1] - X[i] >= 0.
+     */
+    @Test
+    public void lic5_negative_noDecreasingX() {
+        Main.NUMPOINTS = 4;
+        Main.X = new double[]{1.0, 2.0, 2.0, 5.0}; // for all i, X[i+1] - X[i] >= 0
+        Main.Y = new double[]{0.0, 0.0, 0.0, 0.0};
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertFalse("LIC 5 should be false when X never decreases.", cmv[5]);
+    }
+
+    /**
+     * LIC 5 should return false when NUMPOINTS < 2 (invalid).
+     */
+    @Test
+    public void lic5_invalidInput_lessThanTwoPoints() {
+        // Invalid Input
+        Main.NUMPOINTS = 1;
+        Main.X = new double[]{1.0};
+        Main.Y = new double[]{0.0};
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertFalse("LIC 5 should be false when NUMPOINTS < 2.", cmv[5]);
+    }
+
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(CMVTest.class);
         System.out.println(result.getFailures());
