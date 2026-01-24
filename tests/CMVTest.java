@@ -161,6 +161,10 @@ public class CMVTest {
         assertTrue(cmv[1]);
 
     }
+    /**
+     * Asserts false for:
+     * - Set of three consecutive points that share the same value
+    */
     @Test
     public void testLic2SamePoints() {
         Main.PARAMETERS = new Main.Parameters();
@@ -171,6 +175,10 @@ public class CMVTest {
 
         assertFalse(cmv[2]);
     }
+    /**
+     * Asserts false for:
+     * - Set of less than three consecutive points
+     */
     @Test
     public void test2Lic2LessThanThreePoints() {
         Main.PARAMETERS = new Main.Parameters();
@@ -181,6 +189,10 @@ public class CMVTest {
 
         assertFalse(cmv[2]);
     }
+    /**
+     * Asserts true for:
+     * - Set of three consecutive points that are valid
+     */
     @Test
     public void testLic2ConditionMet(){
         Main.PARAMETERS = new Main.Parameters();
