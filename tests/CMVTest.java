@@ -102,6 +102,10 @@ public class CMVTest {
         assertFalse(cmv[0]);
     }
 
+    /**
+     * Asserts false for:
+     * - Negative RADIUS1
+     */
     @Test
     public void testLic1NegativeRadius() {
         Main.PARAMETERS = new Main.Parameters();
@@ -111,6 +115,10 @@ public class CMVTest {
 
         assertFalse(cmv[1]);
     }
+    /**
+     * Asserts false for:
+     * - Less than three points
+     */
     @Test
     public void testLic1LessThanThreePoints() {
         Main.PARAMETERS = new Main.Parameters();
@@ -122,6 +130,10 @@ public class CMVTest {
 
         assertFalse(cmv[1]);
     }
+    /**
+     * Asserts false for:
+     * - All sets of three consecutive points lie within or on the circle 
+     */
     @Test
     public void testLic1WithinRadius() {
         Main.PARAMETERS = new Main.Parameters();
@@ -133,6 +145,10 @@ public class CMVTest {
 
         assertFalse(cmv[1]);
     }
+    /**
+     * Asserts true for:
+     * - At least one set of three consecutive points that can be contained within or on the circle
+     */
     @Test
     public void testLic1NotWithinRadius() {
         Main.PARAMETERS = new Main.Parameters();
