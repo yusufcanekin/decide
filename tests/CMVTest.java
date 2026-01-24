@@ -273,7 +273,7 @@ public class CMVTest {
      * consecutive points such that X[i+1] - X[i] < 0.
      */
     @Test
-    public void lic5_positive_decreasingXExists() {
+    public void testLic5_positive_decreasingXExists() {
         Main.NUMPOINTS = 3;
         Main.X = new double[]{3.0, 1.0, 2.0}; // 1.0 - 3.0 < 0 (true)
         Main.Y = new double[]{0.0, 0.0, 0.0};
@@ -287,7 +287,7 @@ public class CMVTest {
      * X[i+1] - X[i] >= 0.
      */
     @Test
-    public void lic5_negative_noDecreasingX() {
+    public void testLic5_negative_noDecreasingX() {
         Main.NUMPOINTS = 4;
         Main.X = new double[]{1.0, 2.0, 2.0, 5.0}; // for all i, X[i+1] - X[i] >= 0
         Main.Y = new double[]{0.0, 0.0, 0.0, 0.0};
@@ -300,7 +300,7 @@ public class CMVTest {
      * LIC 5 should return false when NUMPOINTS < 2 (invalid).
      */
     @Test
-    public void lic5_invalidInput_lessThanTwoPoints() {
+    public void testLic5_invalidInput_lessThanTwoPoints() {
         // Invalid Input
         Main.NUMPOINTS = 1;
         Main.X = new double[]{1.0};
