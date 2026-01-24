@@ -198,8 +198,8 @@ public class CMVTest {
     }
 
     /**
-     * LIC 3 should return false when the number of data points is less than 3,
-     * since the condition cannot be evaluated.
+     * Since the condition cannot be evaluated LIC 3 should return
+     * false when the number of data points is less than 3.
      */
     @Test
     public void testLic3_invalidInput_lessThanThreePoints() {
@@ -213,6 +213,59 @@ public class CMVTest {
         boolean[] cmv = Cmv.computeCMV();
 
         assertFalse("LIC 3 should be false when NUMPOINTS < 3", cmv[3]);
+    }
+
+    /**
+     * LIC 4 should return true if there exists at least one set of Q_PTS consecutive points
+     * that lie in more than QUADS quadrants.
+     */
+    @Test
+    public void lic4_positive_moreThanQuadsQuadrantsExists() {
+        Main.NUMPOINTS = 4;
+        Main.X = new double[]{ 1, -1, -1,  1};
+        Main.Y = new double[]{ 1,  1, -1, -1}; // I, II, III, IV
+
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.Q_PTS = 4;
+        Main.PARAMETERS.QUADS = 3;
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertTrue("LIC 4 should be true when points span more than QUADS quadrants.", cmv[4]);
+    }
+
+    /**
+     * LIC 4 should return false if for every window of Q_PTS consecutive points,
+     * the number of distinct quadrants is <= QUADS.
+     */
+    @Test
+    public void lic4_negative_notMoreThanQuadsQuadrants() {
+        Main.NUMPOINTS = 4;
+        Main.X = new double[]{ 0,  1,  2,  3};
+        Main.Y = new double[]{ 0,  0,  1,  2}; // (0,0)->I, (1,0)->I, (2,1)->I, (3,2)->I
+
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.Q_PTS = 4;
+        Main.PARAMETERS.QUADS = 1;
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertFalse("LIC 4 should be false when # of distinct quadrants <= QUADS.",cmv[4]);
+    }
+
+    /**
+     * LIC 4 should return false when NUMPOINTS < Q_PTS (invalid).
+     */
+    @Test
+    public void lic4_invalidInput_numPointsLessThanQpts() {
+        Main.NUMPOINTS = 3;
+        Main.X = new double[]{ 1, -1, 0};
+        Main.Y = new double[]{ 1,  1, 0};
+
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.Q_PTS = 4;   // It needs 4 points, but we have 3
+        Main.PARAMETERS.QUADS = 1;
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertFalse("LIC 4 should be false when NUMPOINTS < Q_PTS.", cmv[4]);
     }
 
     public static void main(String[] args) {

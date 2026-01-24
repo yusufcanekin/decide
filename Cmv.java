@@ -184,7 +184,70 @@ public class Cmv {
 
         return false;
     }
-    private static boolean lic4()  { return false; }
+
+
+    /**
+     * LIC 4:
+     * There exists at least one set of Q_PTS consecutive data points
+     * that lie in more than QUADS quadrants (quadrant priority rules apply).
+     */
+    private static boolean lic4() {
+        int qPts = Main.PARAMETERS.Q_PTS;
+        int quads = Main.PARAMETERS.QUADS;
+
+        // Condition is not met if NUMPOINTS < Q_PTS
+        if (Main.NUMPOINTS < qPts) {
+            return false;
+        }
+
+        // We need consecutive points, so we are sliding a window of size Q_PTS
+        for (int start = 0; start <= Main.NUMPOINTS - qPts; start++) {
+
+            // Booleans indicating whether ith quadrant is present in consecutive subset of points or not
+            boolean[] seenQuadrants = new boolean[4];
+
+            for (int j = start; j < start + qPts; j++) {
+                int q = quadrant(Main.X[j], Main.Y[j]); // quadrant delegation is done in this line
+                seenQuadrants[q - 1] = true;
+            }
+
+            int distinct = 0;
+            for (boolean s : seenQuadrants) {
+                if (s) distinct++;
+            }
+
+            if (distinct > quads) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Helper function for quadrant mapping with priority as per spec example.
+     */
+    private static int quadrant(double x, double y) {
+        // Axis and origin cases with priority
+        if (x == 0 && y == 0) return 1;      // (0,0) -> I
+        if (x == 0) {
+            if (y > 0) return 1;             // (0, +) -> I
+            if (y < 0) return 3;             // (0, -) -> III
+            return 1;                        // (0,0), handled already but for safety, returning 1
+        }
+
+        if (y == 0) {
+            if (x > 0) return 1;             // (+,0) -> I
+            if (x < 0) return 2;             // (-,0) -> II
+            return 1;
+        }
+
+        // Non axis points
+        if (x > 0 && y > 0) return 1;
+        if (x < 0 && y > 0) return 2;
+        if (x < 0 && y < 0) return 3;
+        return 4; // x > 0 && y < 0
+    }
     private static boolean lic5()  { return false; }
     private static boolean lic6()  { return false; }
     private static boolean lic7()  { return false; }
