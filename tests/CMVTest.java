@@ -168,7 +168,6 @@ public class CMVTest {
     @Test
     public void testLic2SamePoints() {
         Main.PARAMETERS = new Main.Parameters();
-
         Main.X = new double[] {0.0, 0.0, 1.0};
         Main.Y = new double[] {0.0, 0.0, 1.0};
         boolean[] cmv = Cmv.computeCMV();
@@ -204,8 +203,61 @@ public class CMVTest {
         assertTrue(cmv[2]);
 
     }
+
+    /**
+     * LIC 3 should return true if there exists at least one set of
+     * three consecutive points forming a triangle with area > AREA1.
+     */
+    @Test
+    public void testLic3_positive_triangleAreaGreaterThanArea1() {
+        Main.NUMPOINTS = 3;
+        Main.X = new double[]{0, 0, 4};
+        Main.Y = new double[]{0, 3, 0};
+
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.AREA1 = 5.0;
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertTrue("LIC 3 should be true when triangle area > AREA1", cmv[3]);
+    }
+
+    /**
+     * LIC 3 should return false if all triangles formed by three
+     * consecutive points have area <= AREA1.
+     */
+    @Test
+    public void testLic3_negative_triangleAreaNotGreaterThanArea1() {
+        Main.NUMPOINTS = 3;
+        Main.X = new double[]{0, 0, 1};
+        Main.Y = new double[]{0, 1, 0};
+
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.AREA1 = 1.0;
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertFalse("LIC 3 should be false when triangle area <= AREA1", cmv[3]);
+    }
+
+    /**
+     * LIC 3 should return false when the number of data points is less than 3,
+     * since the condition cannot be evaluated.
+     */
+    @Test
+    public void testLic3_invalidInput_lessThanThreePoints() {
+        // Invalid Input
+        Main.NUMPOINTS = 2;
+        Main.X = new double[]{0, 1};
+        Main.Y = new double[]{0, 1};
+
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.AREA1 = 0.0;
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertFalse("LIC 3 should be false when NUMPOINTS < 3", cmv[3]);
+    }
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(CMVTest.class);
+        System.out.println(result.getFailures());
     }
 
 }
