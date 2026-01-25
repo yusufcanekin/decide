@@ -122,6 +122,100 @@ public class Cmv {
      * 
      * @return
      */
-    private static boolean lic13() { return false; }
+    private static boolean lic13() {
+        if (Main.NUMPOINTS < 5) {
+            return false;
+        }
+
+        int a = Main.PARAMETERS.A_PTS;
+        int b = Main.PARAMETERS.B_PTS;
+
+        double r1 = Main.PARAMETERS.RADIUS1;
+        double r2 = Main.PARAMETERS.RADIUS2;
+
+        // Parameter constraints
+        if (a < 1 || b < 1) {
+            return false;
+        }
+        if (a + b < Main.NUMPOINTS - 3) {
+            return false;
+        }
+        if (r1 < 0 || r2 < 0) {
+            return false;
+        }
+
+        boolean cannotFitR1 = false;
+        boolean canFitR2 = false;
+
+        int step1 = a + 1;
+        int step2 = b + 1;
+
+        for (int i = 0; i + step1 + step2 < Main.NUMPOINTS; i++) {
+            int j = i + step1;
+            int k = j + step2;
+
+            double x1 = Main.X[i], y1 = Main.Y[i];
+            double x2 = Main.X[j], y2 = Main.Y[j];
+            double x3 = Main.X[k], y3 = Main.Y[k];
+
+            double required = minEnclosingCircleRadius(x1, y1, x2, y2, x3, y3);
+            if (required > r1) {
+                cannotFitR1 = true;
+            }
+            if (required <= r2) {
+                canFitR2 = true;
+            }
+
+            if (cannotFitR1 && canFitR2) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static double minEnclosingCircleRadius(double x1, double y1, double x2, double y2, double x3, double y3) {
+        // TOL = tolerance for floating point comparisons
+        final double TOL = 1e-12;
+
+        double a = dist(x2, y2, x3, y3);
+        double b = dist(x1, y1, x3, y3);
+        double c = dist(x1, y1, x2, y2);
+
+        // Check for collinearity using area of triangle
+        double dMax = Math.max(a, Math.max(b, c));
+
+        // Twice area using corss product
+        double cross = (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1);
+        double area2 = Math.abs(cross);
+
+        // Collinear (or very close to it): Radius is half the longest segment.
+        if (area2 < TOL) {
+            return dMax / 2.0;
+        }
+
+        // Check if triangle is right/obtuse:
+        // If c is longest side, then if c^2 >= a^2 + b^2, 
+        // triangle is right/obtuse at opposite vertex.
+        // Sort sides so that L is largest, then compare L^2 >= S1^2 + S2^2
+        double[] s = new double[] {a, b , c};
+        java.util.Arrays.sort(s);
+        double S1 = s[0], S2 = s[1], L = s[2];
+
+        if (L * L >= S1 * S1 + S2 * S2 - TOL) {
+            return L / 2.0;
+        }
+
+        // Acute triangle: use circumradius formula
+        // R = abc / 4A , area2 = 2A => 4A = 2*area2
+        return (a * b * c) / (2.0 * area2);
+    }
+
+    private static double dist(double x1, double y1, double x2, double y2) {
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
     private static boolean lic14() { return false; }
 }
