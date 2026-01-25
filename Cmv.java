@@ -319,9 +319,7 @@ public class Cmv {
         return false;
     }
 
-    private static boolean lic6()  { return false; }
-    private static boolean lic7()  { return false; }
-    private static boolean lic8()  { return false; }
+
     private static boolean lic9()  { return false; }
     private static boolean lic10() { return false; }
     private static boolean lic11() { return false; }
