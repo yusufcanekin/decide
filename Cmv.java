@@ -24,15 +24,6 @@ public class Cmv {
     }
 
     // LIC stubs
-    private static boolean lic0()  { return false; }
-    private static boolean lic1()  { return false; }
-    private static boolean lic2()  { return false; }
-    private static boolean lic3()  { return false; }
-    private static boolean lic4()  { return false; }
-    private static boolean lic5()  { return false; }
-    private static boolean lic6()  { return false; }
-    private static boolean lic7()  { return false; }
-    private static boolean lic8()  { return false; }
 
 
 /**
@@ -68,7 +59,7 @@ public class Cmv {
             double x2 = Main.X[middleIdx], y2 = Main.Y[middleIdx];
             double x3 = Main.X[lastIdx], y3 = Main.Y[lastIdx];
 
-             double angle=calculateAngle(x1,y1,x2,y2,x3,y3);
+             double angle=calculateAngle9(x1,y1,x2,y2,x3,y3);
              if(angle < Math.PI-EPSILON || angle < Math.PI+EPSILON){
                     return true;
              }
@@ -84,7 +75,7 @@ public class Cmv {
     * @param x3, y3 Coordinates of the third point.
     * @return The angle in radians between 0 and PI.
     */
-    private static double calculateAngle(double x1, double y1, double x2, double y2, double x3, double y3) {
+    private static double calculateAngle9(double x1, double y1, double x2, double y2, double x3, double y3) {
     double v1x = x1 - x2;
     double v1y = y1 - y2;
     double v2x = x3 - x2;
@@ -264,7 +255,7 @@ public class Cmv {
             if ((angle < Main.PARAMETERS.PI - Main.PARAMETERS.EPSILON || angle > Main.PARAMETERS.PI + Main.PARAMETERS.EPSILON) && angle != -1) {
                 return true;
             }
-        }
+        } 
 
         return false;
     }
