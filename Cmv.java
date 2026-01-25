@@ -300,7 +300,25 @@ public class Cmv {
         return 4; // x > 0 && y < 0
     }
 
-    private static boolean lic5()  { return false; }
+    /**
+     * LIC 5:
+     * There exists at least one set of two consecutive data points, (X[i],Y[i]) and (X[j],Y[j]), such
+     * that X[j] - X[i] < 0. (where i = j-1). i.e. X[i+1] - X[i] < 0
+     */
+    private static boolean lic5() {
+        // Condition is not met when NUMPOINTS < 2
+        if (Main.NUMPOINTS < 2) {
+            return false;
+        }
+
+        for (int i = 0; i < Main.NUMPOINTS - 1; i++) {
+            if (Main.X[i + 1] - Main.X[i] < 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static boolean lic6()  { return false; }
     private static boolean lic7()  { return false; }
     private static boolean lic8()  { return false; }
