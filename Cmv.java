@@ -4,6 +4,21 @@ public class Cmv {
     public static boolean[] computeCMV() {
         boolean[] cmv = new boolean[15];
 
+        if (Main.PARAMETERS == null) {
+            Main.PARAMETERS = new Main.Parameters();
+        }
+
+        if (Main.X == null || Main.Y == null) {
+            Main.NUMPOINTS = 0;
+            return cmv;
+        }
+
+        int n = Math.min(Main.X.length, Main.Y.length);
+
+        if (Main.NUMPOINTS <= 0 || Main.NUMPOINTS > n) {
+            Main.NUMPOINTS = n;
+        }
+
         cmv[0]  = lic0();
         cmv[1]  = lic1();
         cmv[2]  = lic2();
@@ -23,6 +38,7 @@ public class Cmv {
         return cmv;
     }
 
+
     // LIC stubs
 
 
@@ -36,37 +52,40 @@ public class Cmv {
  * @return true if the condition is met, false otherwise.
  */
 
-    private static boolean lic9()  { 
-        int cpts= Main.PARAMETERS.C_PTS;
+    private static boolean lic9() {
+        int cpts = Main.PARAMETERS.C_PTS;
         int dpts = Main.PARAMETERS.D_PTS;
-        int np = Main.NUMPOINTS;
+        int np   = Main.NUMPOINTS;
 
-        if (np<5){
-            return false ;
+        if (np < 5) {
+            return false;
         }
 
-        if(1>cpts || 1>dpts || (cpts+dpts > np -3) ){
-            return false; 
+        if (cpts < 1 || dpts < 1 || (cpts + dpts > np - 3)) {
+            return false;
         }
 
-        for(int i =0 ; i < np-cpts-dpts-2;i++){
+        double eps = Main.PARAMETERS.EPSILON;
 
-            int firstIdx = i;
-            int middleIdx = i + cpts + 1; 
-            int lastIdx = middleIdx + dpts + 1; 
+        for (int i = 0; i < np - cpts - dpts - 2; i++) {
+            int firstIdx  = i;
+            int middleIdx = i + cpts + 1;
+            int lastIdx   = middleIdx + dpts + 1;
 
-            double x1 = Main.X[firstIdx], y1 = Main.Y[firstIdx];
+            double x1 = Main.X[firstIdx],  y1 = Main.Y[firstIdx];
             double x2 = Main.X[middleIdx], y2 = Main.Y[middleIdx];
-            double x3 = Main.X[lastIdx], y3 = Main.Y[lastIdx];
+            double x3 = Main.X[lastIdx],   y3 = Main.Y[lastIdx];
 
-             double angle=calculateAngle9(x1,y1,x2,y2,x3,y3);
-             if(angle < Math.PI-EPSILON || angle < Math.PI+EPSILON){
-                    return true;
-             }
+            double angle = calculateAngle9(x1, y1, x2, y2, x3, y3);
+
+            if (angle < (Math.PI - eps) || angle > (Math.PI + eps)) {
+                return true;
+            }
         }
-        
-    return false; 
+
+        return false;
     }
+
 
     /**
     * Calculates the angle (in radians) between three points where (x2, y2) is the vertex.
