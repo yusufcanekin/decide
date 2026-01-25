@@ -168,7 +168,6 @@ public class CMVTest {
     @Test
     public void testLic2SamePoints() {
         Main.PARAMETERS = new Main.Parameters();
-
         Main.X = new double[] {0.0, 0.0, 1.0};
         Main.Y = new double[] {0.0, 0.0, 1.0};
         boolean[] cmv = Cmv.computeCMV();
