@@ -1,3 +1,4 @@
+
 public class Cmv {
     public static double EPSILON = 0.01;
     public static boolean[] computeCMV() {
@@ -106,21 +107,15 @@ public class Cmv {
                                             double x1, double y1, 
                                             double x2, double y2) {
            
-            /**
-             * Calculate the lengths of the sides of the triangle formed by the three points
-             */
+            //Calculate the lengths of the sides of the triangle formed by the three points
             double d01 = Math.hypot(x1 - x0, y1 - y0);
             double d12 = Math.hypot(x2 - x1, y2 - y1);
             double d20 = Math.hypot(x2 - x0, y2 - y0);
             
-            /**
-             * Calculate the area of triangle 
-             */
+            //Calculate the area of triangle 
             double area = Math.abs(x0*(y1 - y2) + x1*(y2 -y0) + x2*(y1 - y0)) / 2.0;
             
-            /**
-             * If area is zero, points are collinear; return half the length of the longest side
-             */
+            //If area is zero, points are collinear; return half the length of the longest side
             if (Math.abs(area) < 1e-10) {
                 return Math.max(Math.max(d01, d12), d20) / 2.0;
             }
@@ -131,10 +126,8 @@ public class Cmv {
         
             double s = (a + b + c) / 2.0;
             double triangleArea = Math.sqrt(s * (s - a) * (s - b) * (s - c));
-            
-            /**
-             * Prevent divison by zero
-             */
+        
+            //Prevent divison by zero
             if (Math.abs(triangleArea) < 1e-10) {
                 return Math.max(Math.max(d01, d12), d20) / 2.0;
             }
@@ -145,8 +138,68 @@ public class Cmv {
              */
             return (a * b * c) / (4 * triangleArea);
         }
-    
-    private static boolean lic2()  { return false; }
+
+    /**
+     * There exists at least one set of three consecutive data points which form an angle such that:
+     *
+     *      angle < (PI−EPSILON)
+     *      or
+     *      angle > (PI+EPSILON)
+     *
+     * The second of the three consecutive points is always the vertex of the angle. If either the first
+     * point or the last point (or both) coincides with the vertex, the angle is undefined and the LIC
+     * is not satisfied by those three points.
+     *
+     * Condition met when:
+     * - angle < (PI−EPSILON) or angle > (PI+EPSILON)
+     * - the second of the three consecutive points is always the vertex of the angle
+     *
+     * Condition not met when:
+     * - angle => (PI−EPSILON) or angle <= (PI+EPSILON)
+     * - (PI - EPSILON) ≤ angle ≤ (PI + EPSILON)
+     * - point or the last point (or both) coincides with the vertex, the angle is undefined
+     * @return
+     */
+    private static boolean lic2()  {
+        if (Main.X.length < 3) {
+            return false;
+        }
+
+        for (int i = 0; i < Main.X.length - 2; i++) {
+            double x0 = Main.X[i];
+            double y0 = Main.Y[i];
+            double x1 = Main.X[i+1];
+            double y1 = Main.Y[i+1];
+            double x2 = Main.X[i+2];
+            double y2 = Main.Y[i+2];
+
+            double angle = calculateAngle(x0, y0, x1, y1, x2, y2);
+
+            if ((angle < Main.PARAMETERS.PI - Main.PARAMETERS.EPSILON || angle > Main.PARAMETERS.PI + Main.PARAMETERS.EPSILON) && angle != -1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static double calculateAngle(double x0, double y0,
+                                         double x1, double y1,
+                                         double x2, double y2) {
+
+        // Calculate distances from vertex to the other two points
+        double d01 = Math.hypot(x1 - x0, y1 - y0);
+        double d02 = Math.hypot(x2 - x0, y2 - y0);
+
+        // Check if vertex coincides with either point (undefined angle)
+        if (Math.abs(d01) < 1e-10 ||  Math.abs(d02) < 1e-10) {
+            return -1;
+        }
+        else {
+            double angle = Math.atan2(d01, d02);
+            return angle;
+        }
+    }
 
     /**
      * LIC 3:
@@ -173,8 +226,8 @@ public class Cmv {
             // Area of triangle calculated from 3x3 matrix determinant
             double area = Math.abs(
                     x1 * (y2 - y3) -
-                    x2 * (y1 - y3) +
-                    x3 * (y1 - y2)
+                            x2 * (y1 - y3) +
+                            x3 * (y1 - y2)
             ) / 2.0;
 
             if (area > Main.PARAMETERS.AREA1) {
@@ -184,8 +237,6 @@ public class Cmv {
 
         return false;
     }
-
-
     /**
      * LIC 4:
      * There exists at least one set of Q_PTS consecutive data points
@@ -249,7 +300,6 @@ public class Cmv {
         return 4; // x > 0 && y < 0
     }
 
-
     /**
      * LIC 5:
      * There exists at least one set of two consecutive data points, (X[i],Y[i]) and (X[j],Y[j]), such
@@ -268,6 +318,7 @@ public class Cmv {
         }
         return false;
     }
+
     private static boolean lic6()  { return false; }
     private static boolean lic7()  { return false; }
     private static boolean lic8()  { return false; }

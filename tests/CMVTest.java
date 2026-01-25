@@ -161,7 +161,49 @@ public class CMVTest {
         assertTrue(cmv[1]);
 
     }
+    /**
+     * Asserts false for:
+     * - Set of three consecutive points that share the same value
+    */
+    @Test
+    public void testLic2SamePoints() {
+        Main.PARAMETERS = new Main.Parameters();
 
+        Main.X = new double[] {0.0, 0.0, 1.0};
+        Main.Y = new double[] {0.0, 0.0, 1.0};
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertFalse(cmv[2]);
+    }
+    /**
+     * Asserts false for:
+     * - Set of less than three consecutive points
+     */
+    @Test
+    public void test2Lic2LessThanThreePoints() {
+        Main.PARAMETERS = new Main.Parameters();
+
+        Main.X = new double[] {0.0, 1.0};
+        Main.Y = new double[] {0.0, 1.0};
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertFalse(cmv[2]);
+    }
+    /**
+     * Asserts true for:
+     * - Set of three consecutive points that are valid
+     */
+    @Test
+    public void testLic2ConditionMet(){
+        Main.PARAMETERS = new Main.Parameters();
+
+        Main.X = new double[] {0.0, 1.0, 1.0};
+        Main.Y = new double[] {0.0, 0.0, 1.0};
+        boolean[] cmv = Cmv.computeCMV();
+
+        assertTrue(cmv[2]);
+
+    }
 
     /**
      * LIC 3 should return true if there exists at least one set of
