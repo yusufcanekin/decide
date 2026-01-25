@@ -139,29 +139,28 @@ public class Cmv {
             return (a * b * c) / (4 * triangleArea);
         }
 
-
     /**
      * There exists at least one set of three consecutive data points which form an angle such that:
-     * 
-     *      angle < (PI−EPSILON) 
-     *      or 
+     *
+     *      angle < (PI−EPSILON)
+     *      or
      *      angle > (PI+EPSILON)
-     * 
+     *
      * The second of the three consecutive points is always the vertex of the angle. If either the first
      * point or the last point (or both) coincides with the vertex, the angle is undefined and the LIC
      * is not satisfied by those three points.
-     * 
+     *
      * Condition met when:
      * - angle < (PI−EPSILON) or angle > (PI+EPSILON)
      * - the second of the three consecutive points is always the vertex of the angle
-     * 
+     *
      * Condition not met when:
      * - angle => (PI−EPSILON) or angle <= (PI+EPSILON)
      * - (PI - EPSILON) ≤ angle ≤ (PI + EPSILON)
      * - point or the last point (or both) coincides with the vertex, the angle is undefined
      * @return
      */
-    private static boolean lic2()  { 
+    private static boolean lic2()  {
         if (Main.X.length < 3) {
             return false;
         }
@@ -181,26 +180,26 @@ public class Cmv {
             }
         }
 
-        return false; 
+        return false;
     }
-        
-        private static double calculateAngle(double x0, double y0,
-                                            double x1, double y1,
-                                            double x2, double y2) {
-            
-            // Calculate distances from vertex to the other two points
-            double d01 = Math.hypot(x1 - x0, y1 - y0);
-            double d02 = Math.hypot(x2 - x0, y2 - y0);
 
-            // Check if vertex coincides with either point (undefined angle)
-            if (Math.abs(d01) < 1e-10 ||  Math.abs(d02) < 1e-10) {
-                return -1;
-            }
-            else {
-                double angle = Math.atan2(d01, d02);
-                return angle;
-            }
+    private static double calculateAngle(double x0, double y0,
+                                         double x1, double y1,
+                                         double x2, double y2) {
+
+        // Calculate distances from vertex to the other two points
+        double d01 = Math.hypot(x1 - x0, y1 - y0);
+        double d02 = Math.hypot(x2 - x0, y2 - y0);
+
+        // Check if vertex coincides with either point (undefined angle)
+        if (Math.abs(d01) < 1e-10 ||  Math.abs(d02) < 1e-10) {
+            return -1;
         }
+        else {
+            double angle = Math.atan2(d01, d02);
+            return angle;
+        }
+    }
 
     /**
      * LIC 3:
@@ -238,8 +237,69 @@ public class Cmv {
 
         return false;
     }
+    /**
+     * LIC 4:
+     * There exists at least one set of Q_PTS consecutive data points
+     * that lie in more than QUADS quadrants (quadrant priority rules apply).
+     */
+    private static boolean lic4() {
+        int qPts = Main.PARAMETERS.Q_PTS;
+        int quads = Main.PARAMETERS.QUADS;
 
-    private static boolean lic4()  { return false; }
+        // Condition is not met if NUMPOINTS < Q_PTS
+        if (Main.NUMPOINTS < qPts) {
+            return false;
+        }
+
+        // We need consecutive points, so we are sliding a window of size Q_PTS
+        for (int start = 0; start <= Main.NUMPOINTS - qPts; start++) {
+
+            // Booleans indicating whether ith quadrant is present in consecutive subset of points or not
+            boolean[] seenQuadrants = new boolean[4];
+
+            for (int j = start; j < start + qPts; j++) {
+                int q = quadrant(Main.X[j], Main.Y[j]); // quadrant delegation is done in this line
+                seenQuadrants[q - 1] = true;
+            }
+
+            int distinct = 0;
+            for (boolean s : seenQuadrants) {
+                if (s) distinct++;
+            }
+
+            if (distinct > quads) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Helper function for quadrant mapping with priority as per spec example.
+     */
+    private static int quadrant(double x, double y) {
+        // Axis and origin cases with priority
+        if (x == 0 && y == 0) return 1;      // (0,0) -> I
+        if (x == 0) {
+            if (y > 0) return 1;             // (0, +) -> I
+            if (y < 0) return 3;             // (0, -) -> III
+            return 1;                        // (0,0), handled already but for safety, returning 1
+        }
+
+        if (y == 0) {
+            if (x > 0) return 1;             // (+,0) -> I
+            if (x < 0) return 2;             // (-,0) -> II
+            return 1;
+        }
+
+        // Non axis points
+        if (x > 0 && y > 0) return 1;
+        if (x < 0 && y > 0) return 2;
+        if (x < 0 && y < 0) return 3;
+        return 4; // x > 0 && y < 0
+    }
+
     private static boolean lic5()  { return false; }
     private static boolean lic6()  { return false; }
     private static boolean lic7()  { return false; }
