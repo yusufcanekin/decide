@@ -1,3 +1,4 @@
+
 public class Cmv {
     public static double EPSILON = 0.01;
     public static boolean[] computeCMV() {
@@ -167,6 +168,8 @@ public class Cmv {
 
         /**
          * Defensive checks for invalid A_PTS / B_PTS values.
+                /**
+         * Defensive checks for invalid A_PTS / B_PTS values.
          */
         if (aPts < 1 || bPts < 1) return false;
 
@@ -190,49 +193,16 @@ public class Cmv {
         return false;
     }
 
-    // ==================== Helper functions ====================
+    // ==================== Helper functions (for LIC6–LIC8) ====================
 
-    /**
-     * Helper function to calculate Euclidean distance between two points.
-     *
-     * @param x1 x-coordinate of first point
-     * @param y1 y-coordinate of first point
-     * @param x2 x-coordinate of second point
-     * @param y2 y-coordinate of second point
-     * @return distance between (x1,y1) and (x2,y2)
-     */
     private static double euclid(double x1, double y1, double x2, double y2) {
         return Math.hypot(x2 - x1, y2 - y1);
     }
 
-    /**
-     * Helper function to compare floating-point values with tolerance.
-     * Used mainly for checking whether two points are "the same" for the LIC6 special case.
-     *
-     * @param a first value
-     * @param b second value
-     * @return true if |a-b| <= EPSILON
-     */
     private static boolean nearlyEqual(double a, double b) {
         return Math.abs(a - b) <= EPSILON;
     }
 
-    /**
-     * Helper function to calculate the perpendicular distance from a point (x0,y0)
-     * to the infinite line passing through (x1,y1) and (x2,y2).
-     *
-     * Formula:
-     * distance = |(y2-y1)x0 - (x2-x1)y0 + x2*y1 - y2*x1| / sqrt((y2-y1)^2 + (x2-x1)^2)
-     *
-     * @param x0 x-coordinate of the point
-     * @param y0 y-coordinate of the point
-     * @param x1 x-coordinate of first line endpoint
-     * @param y1 y-coordinate of first line endpoint
-     * @param x2 x-coordinate of second line endpoint
-     * @param y2 y-coordinate of second line endpoint
-     * @param denom precomputed denominator sqrt((y2-y1)^2 + (x2-x1)^2)
-     * @return perpendicular distance from (x0,y0) to the line
-     */
     private static double pointToLineDistance(
             double x0, double y0,
             double x1, double y1,
@@ -243,26 +213,6 @@ public class Cmv {
         return num / denom;
     }
 
-    /***
-     * Helper function to determine whether three points can be contained within or on a circle
-     * of radius r (i.e., whether the minimal enclosing circle radius is <= r).
-     *
-     * Approach:
-     * 1) If the farthest pair distance is greater than 2r, they cannot fit (early exit).
-     * 2) If the points are collinear, the minimal radius is maxDistance/2.
-     * 3) Otherwise:
-     *    - If the triangle is right/obtuse, minimal radius is maxDistance/2.
-     *    - If the triangle is acute, minimal radius is the circumradius.
-     *
-     * @param x1 first point x
-     * @param y1 first point y
-     * @param x2 second point x
-     * @param y2 second point y
-     * @param x3 third point x
-     * @param y3 third point y
-     * @param r circle radius to test against
-     * @return true if the three points fit within/on a circle of radius r, otherwise false
-     */
     private static boolean fitsInCircleRadius(
             double x1, double y1,
             double x2, double y2,
@@ -275,26 +225,13 @@ public class Cmv {
 
         double max = Math.max(d12, Math.max(d23, d13));
 
-        /**
-         * Early exit: if the farthest two points are more than the diameter apart,
-         * there is no way all three points fit in a circle of radius r.
-         */
         if (max > 2.0 * r + EPSILON) return false;
 
-        /**
-         * Compute twice the triangle area using the cross product.
-         * If the area is near zero, the points are collinear.
-         */
         double cross = Math.abs((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1));
         if (cross <= EPSILON) {
             return (max / 2.0) <= r + EPSILON;
         }
 
-        /**
-         * Check if triangle is right or obtuse:
-         * If maxSide^2 >= sum(otherSides^2), then minimal enclosing circle
-         * is determined by the longest side.
-         */
         double a = d23, b = d13, c = d12;
         double a2 = a * a, b2 = b * b, c2 = c * c;
 
@@ -307,17 +244,192 @@ public class Cmv {
         if (rightOrObtuse) {
             minRadius = max / 2.0;
         } else {
-            /**
-             * Acute triangle: minimal enclosing circle is the circumcircle.
-             * Circumradius = (a*b*c) / (4*Area)
-             * where Area = cross / 2.
-             */
             double area = cross / 2.0;
             double circumRadius = (a * b * c) / (4.0 * area);
             minRadius = circumRadius;
         }
 
         return minRadius <= r + EPSILON;
+    }
+  
+    /**
+     * There exists at least one set of three consecutive data points which form an angle such that:
+     *
+     *      angle < (PI−EPSILON)
+     *      or
+     *      angle > (PI+EPSILON)
+     *
+     * The second of the three consecutive points is always the vertex of the angle. If either the first
+     * point or the last point (or both) coincides with the vertex, the angle is undefined and the LIC
+     * is not satisfied by those three points.
+     *
+     * Condition met when:
+     * - angle < (PI−EPSILON) or angle > (PI+EPSILON)
+     * - the second of the three consecutive points is always the vertex of the angle
+     *
+     * Condition not met when:
+     * - angle => (PI−EPSILON) or angle <= (PI+EPSILON)
+     * - (PI - EPSILON) ≤ angle ≤ (PI + EPSILON)
+     * - point or the last point (or both) coincides with the vertex, the angle is undefined
+     * @return
+     */
+    private static boolean lic2()  {
+        if (Main.X.length < 3) {
+            return false;
+        }
+
+        for (int i = 0; i < Main.X.length - 2; i++) {
+            double x0 = Main.X[i];
+            double y0 = Main.Y[i];
+            double x1 = Main.X[i+1];
+            double y1 = Main.Y[i+1];
+            double x2 = Main.X[i+2];
+            double y2 = Main.Y[i+2];
+
+            double angle = calculateAngle(x0, y0, x1, y1, x2, y2);
+
+            if ((angle < Main.PARAMETERS.PI - Main.PARAMETERS.EPSILON || angle > Main.PARAMETERS.PI + Main.PARAMETERS.EPSILON) && angle != -1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static double calculateAngle(double x0, double y0,
+                                         double x1, double y1,
+                                         double x2, double y2) {
+
+        // Calculate distances from vertex to the other two points
+        double d01 = Math.hypot(x1 - x0, y1 - y0);
+        double d02 = Math.hypot(x2 - x0, y2 - y0);
+
+        // Check if vertex coincides with either point (undefined angle)
+        if (Math.abs(d01) < 1e-10 ||  Math.abs(d02) < 1e-10) {
+            return -1;
+        }
+        else {
+            double angle = Math.atan2(d01, d02);
+            return angle;
+        }
+    }
+
+    /**
+     * LIC 3:
+     * There exists at least one set of three consecutive data points
+     * that are the vertices of a triangle with area greater than AREA1.
+     */
+    private static boolean lic3() {
+
+        // This LCI needs at least 3 points to form a triangular
+        if (Main.NUMPOINTS < 3) {
+            return false;
+        }
+
+        // We need consecutive points, so sliding a window of 3 would catch each relevant subset
+        for (int i = 0; i <= Main.NUMPOINTS - 3; i++) {
+
+            double x1 = Main.X[i];
+            double y1 = Main.Y[i];
+            double x2 = Main.X[i + 1];
+            double y2 = Main.Y[i + 1];
+            double x3 = Main.X[i + 2];
+            double y3 = Main.Y[i + 2];
+
+            // Area of triangle calculated from 3x3 matrix determinant
+            double area = Math.abs(
+                    x1 * (y2 - y3) -
+                            x2 * (y1 - y3) +
+                            x3 * (y1 - y2)
+            ) / 2.0;
+
+            if (area > Main.PARAMETERS.AREA1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    /**
+     * LIC 4:
+     * There exists at least one set of Q_PTS consecutive data points
+     * that lie in more than QUADS quadrants (quadrant priority rules apply).
+     */
+    private static boolean lic4() {
+        int qPts = Main.PARAMETERS.Q_PTS;
+        int quads = Main.PARAMETERS.QUADS;
+
+        // Condition is not met if NUMPOINTS < Q_PTS
+        if (Main.NUMPOINTS < qPts) {
+            return false;
+        }
+
+        // We need consecutive points, so we are sliding a window of size Q_PTS
+        for (int start = 0; start <= Main.NUMPOINTS - qPts; start++) {
+
+            // Booleans indicating whether ith quadrant is present in consecutive subset of points or not
+            boolean[] seenQuadrants = new boolean[4];
+
+            for (int j = start; j < start + qPts; j++) {
+                int q = quadrant(Main.X[j], Main.Y[j]); // quadrant delegation is done in this line
+                seenQuadrants[q - 1] = true;
+            }
+
+            int distinct = 0;
+            for (boolean s : seenQuadrants) {
+                if (s) distinct++;
+            }
+
+            if (distinct > quads) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Helper function for quadrant mapping with priority as per spec example.
+     */
+    private static int quadrant(double x, double y) {
+        // Axis and origin cases with priority
+        if (x == 0 && y == 0) return 1;      // (0,0) -> I
+        if (x == 0) {
+            if (y > 0) return 1;             // (0, +) -> I
+            if (y < 0) return 3;             // (0, -) -> III
+            return 1;                        // (0,0), handled already but for safety, returning 1
+        }
+
+        if (y == 0) {
+            if (x > 0) return 1;             // (+,0) -> I
+            if (x < 0) return 2;             // (-,0) -> II
+            return 1;
+        }
+
+        // Non axis points
+        if (x > 0 && y > 0) return 1;
+        if (x < 0 && y > 0) return 2;
+        if (x < 0 && y < 0) return 3;
+        return 4; // x > 0 && y < 0
+    }
+
+    /**
+     * LIC 5:
+     * There exists at least one set of two consecutive data points, (X[i],Y[i]) and (X[j],Y[j]), such
+     * that X[j] - X[i] < 0. (where i = j-1). i.e. X[i+1] - X[i] < 0
+     */
+    private static boolean lic5() {
+        // Condition is not met when NUMPOINTS < 2
+        if (Main.NUMPOINTS < 2) {
+            return false;
+        }
+
+        for (int i = 0; i < Main.NUMPOINTS - 1; i++) {
+            if (Main.X[i + 1] - Main.X[i] < 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
