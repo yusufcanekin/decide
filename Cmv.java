@@ -1,18 +1,19 @@
 public class Cmv {
     public static double EPSILON = 0.01;
+
     public static boolean[] computeCMV() {
         boolean[] cmv = new boolean[15];
 
-        cmv[0]  = lic0();
-        cmv[1]  = lic1();
-        cmv[2]  = lic2();
-        cmv[3]  = lic3();
-        cmv[4]  = lic4();
-        cmv[5]  = lic5();
-        cmv[6]  = lic6();
-        cmv[7]  = lic7();
-        cmv[8]  = lic8();
-        cmv[9]  = lic9();
+        cmv[0] = lic0();
+        cmv[1] = lic1();
+        cmv[2] = lic2();
+        cmv[3] = lic3();
+        cmv[4] = lic4();
+        cmv[5] = lic5();
+        cmv[6] = lic6();
+        cmv[7] = lic7();
+        cmv[8] = lic8();
+        cmv[9] = lic9();
         cmv[10] = lic10();
         cmv[11] = lic11();
         cmv[12] = lic12();
@@ -23,24 +24,57 @@ public class Cmv {
     }
 
     // LIC stubs
-    private static boolean lic0()  { return false; }
-    private static boolean lic1()  { return false; }
-    private static boolean lic2()  { return false; }
-    private static boolean lic3()  { return false; }
-    private static boolean lic4()  { return false; }
-    private static boolean lic5()  { return false; }
-    private static boolean lic6()  { return false; }
-    private static boolean lic7()  { return false; }
-    private static boolean lic8()  { return false; }
-    private static boolean lic9()  { return false; }
-    private static boolean lic10() { return false; }
+    private static boolean lic0() {
+        return false;
+    }
+
+    private static boolean lic1() {
+        return false;
+    }
+
+    private static boolean lic2() {
+        return false;
+    }
+
+    private static boolean lic3() {
+        return false;
+    }
+
+    private static boolean lic4() {
+        return false;
+    }
+
+    private static boolean lic5() {
+        return false;
+    }
+
+    private static boolean lic6() {
+        return false;
+    }
+
+    private static boolean lic7() {
+        return false;
+    }
+
+    private static boolean lic8() {
+        return false;
+    }
+
+    private static boolean lic9() {
+        return false;
+    }
+
+    private static boolean lic10() {
+        return false;
+    }
 
     /**
-     * There exists at least one set of two data points (X[i], Y[i]) and (X[j], Y[j]),
+     * There exists at least one set of two data points (X[i], Y[i]) and (X[j],
+     * Y[j]),
      * separated by exactly G_PTS such that X[j] - X[i] < 0
      *
-     * Condition not met when:       NUMPOINTS < 3
-     * Condition met when:           1 <= G_PTS <= NUMPOINTS - 2
+     * Condition not met when: NUMPOINTS < 3
+     * Condition met when: 1 <= G_PTS <= NUMPOINTS - 2
      *
      * @return true if condition met, false otherwise.
      */
@@ -68,12 +102,14 @@ public class Cmv {
     /**
      * There exists at least one set of two data points, separated by exactly K_PTS,
      * which are more than LENGTH1 apart.
-     * Additionally, there exists at least one set of two data points, (same or different),
+     * Additionally, there exists at least one set of two data points, (same or
+     * different),
      * separated by exactly K_PTS, which are less than LENGTH2 apart.
      * 
-     * Condition not met when:       NUMPOINTS < 3
-     * Condition met when:           0 <= LENGTH2
-     * @return
+     * Condition not met when: NUMPOINTS < 3
+     * Condition met when: 0 <= LENGTH2
+     * 
+     * @return true if condition met, false otherwise.
      */
     private static boolean lic12() {
         // Condition not met when NUMPOINTS < 3
@@ -119,8 +155,16 @@ public class Cmv {
     }
 
     /**
+     * There exists at least one set of three data points (X[i], Y[i]), (X[j],
+     * Y[j]), and (X[k], Y[k]), separated by exactly A_PTS and B_PTS, that cannot be
+     * contained within or on a circle of radius RADIUS1.
+     * Additionally, there exists at least one set of three data points (same or
+     * different) separated by exactly A_PTS and B_PTS that can be contained within or on a
+     * circle of radius RADIUS2.
+     *
+     * Condition not met when: NUMPOINTS < 5 or RADIUS < 0
      * 
-     * @return
+     * @return true if condition met, false otherwise.
      */
     private static boolean lic13() {
         if (Main.NUMPOINTS < 5) {
@@ -195,10 +239,10 @@ public class Cmv {
         }
 
         // Check if triangle is right/obtuse:
-        // If c is longest side, then if c^2 >= a^2 + b^2, 
+        // If c is longest side, then if c^2 >= a^2 + b^2,
         // triangle is right/obtuse at opposite vertex.
         // Sort sides so that L is largest, then compare L^2 >= S1^2 + S2^2
-        double[] s = new double[] {a, b , c};
+        double[] s = new double[] { a, b, c };
         java.util.Arrays.sort(s);
         double S1 = s[0], S2 = s[1], L = s[2];
 
@@ -217,5 +261,7 @@ public class Cmv {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    private static boolean lic14() { return false; }
+    private static boolean lic14() {
+        return false;
+    }
 }
