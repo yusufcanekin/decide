@@ -27,6 +27,7 @@ public class Main {
         public double RADIUS1;
         public double EPSILON;
         public double AREA1;
+        public final double PI =  3.1415926535;
 
         public int Q_PTS;
         public int QUADS;
