@@ -601,7 +601,15 @@ public class CMVTest {
     }
 
 
-    
+    /**
+     * Tests LIC 9: Returns true when an angle is formed that is smaller than the lower bound.
+     * Setup:
+     * Points: (1,0), (99,99), (0,0), (99,99), (0,1)
+     * Spacing: C_PTS=1, D_PTS=1 (Indices 0, 2, and 4 are used)
+     * Epsilon: 0.5
+     * The vectors formed are (-1, 0) and (0, 1) with (0,0) as the vertex. This forms a 90-degree 
+     * angle (PI/2), which is significantly less than (PI - 0.5), satisfying the condition.
+     */
 
     @Test
     public void lic9_true_whenAngleIsSmallerThanLowerBounds(){
@@ -624,6 +632,16 @@ public class CMVTest {
 
     assertTrue("LIC 9 should be true when angle is significantly smaller than PI", cmv[9]);
     }
+
+    /**
+     * Tests LIC 9: Returns false when the angle formed is within the excluded bounds.
+     * Setup:
+     * Points: (1,0), (99,99), (0,0), (99,99), (-1,0)
+     * Spacing: C_PTS=1, D_PTS=1 (Indices 0, 2, and 4 are used)
+     * Epsilon: 0.01
+     * The points (1,0), (0,0), and (-1,0) are collinear, forming an angle of exactly PI radians. 
+     * Since PI is within the range [PI - 0.01, PI + 0.01], the condition is not met.
+     */
     @Test
     public void lic9_false_whenAngleIsWithinBounds() {
         Main.NUMPOINTS = 5;
