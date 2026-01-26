@@ -1,5 +1,12 @@
 public class Pum {
-
+    /**
+     * Computes the Preliminary Unlocking Matrix (PUM) based on the current CMV and LCM.
+     * The matrix is computed using the following rules for LCM[i,j]:
+     * ANDD:PUM[i,j] is true only if both CMV[i] and CMV[j] are true.
+     * ORR: PUM[i,j] is true if at least one of CMV[i] or CMV[j] is true.
+     * NOTUSED: PUM[i,j] is automatically set to true.
+     * * @return A 15x15 boolean matrix representing the Preliminary Unlocking Matrix.
+     */
     public static boolean[][] computePUM() {
 
 
