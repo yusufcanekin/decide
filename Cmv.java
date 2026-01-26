@@ -41,78 +41,6 @@ public class Cmv {
 
     // LIC stubs
 
-
-/**
- * Evaluates Launch Interceptor Condition (LIC) 9.
- * Checks if there exists at least one set of three data points separated by exactly 
- * C_PTS and D_PTS consecutive intervening points, respectively, that form an angle 
- * such that angle < (PI - EPSILON) or angle > (PI + EPSILON).
- * The second point is the vertex of the angle. If the first or last point 
- * coincides with the vertex, the condition is not satisfied for that set.
- * @return true if the condition is met, false otherwise.
- */
-
-    private static boolean lic9() {
-        int cpts = Main.PARAMETERS.C_PTS;
-        int dpts = Main.PARAMETERS.D_PTS;
-        int np   = Main.NUMPOINTS;
-
-        if (np < 5) {
-            return false;
-        }
-
-        if (cpts < 1 || dpts < 1 || (cpts + dpts > np - 3)) {
-            return false;
-        }
-
-        double eps = Main.PARAMETERS.EPSILON;
-
-        for (int i = 0; i < np - cpts - dpts - 2; i++) {
-            int firstIdx  = i;
-            int middleIdx = i + cpts + 1;
-            int lastIdx   = middleIdx + dpts + 1;
-
-            double x1 = Main.X[firstIdx],  y1 = Main.Y[firstIdx];
-            double x2 = Main.X[middleIdx], y2 = Main.Y[middleIdx];
-            double x3 = Main.X[lastIdx],   y3 = Main.Y[lastIdx];
-
-            double angle = calculateAngle9(x1, y1, x2, y2, x3, y3);
-
-            if (angle < (Math.PI - eps) || angle > (Math.PI + eps)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /**
-    * Calculates the angle (in radians) between three points where (x2, y2) is the vertex.
-    * @param x1, y1 Coordinates of the first point.
-    * @param x2, y2 Coordinates of the vertex point.
-    * @param x3, y3 Coordinates of the third point.
-    * @return The angle in radians between 0 and PI.
-    */
-    private static double calculateAngle9(double x1, double y1, double x2, double y2, double x3, double y3) {
-    double v1x = x1 - x2;
-    double v1y = y1 - y2;
-    double v2x = x3 - x2;
-    double v2y = y3 - y2;
-
-    double dotProduct = (v1x * v2x) + (v1y * v2y);
-    double mag1 = Math.sqrt(v1x * v1x + v1y * v1y);
-    double mag2 = Math.sqrt(v2x * v2x + v2y * v2y);
-
-    double cosTheta = dotProduct / (mag1 * mag2);
-
-    cosTheta = Math.max(-1.0, Math.min(1.0, cosTheta));
-
-    return Math.acos(cosTheta);
-
-    }
-
-
      private static boolean lic0()  { 
         /**
          * There exists at least one pair of consecutive points data points
@@ -572,6 +500,77 @@ public class Cmv {
         }
         return false;
     }
+  
+  /**
+ * Evaluates Launch Interceptor Condition (LIC) 9.
+ * Checks if there exists at least one set of three data points separated by exactly 
+ * C_PTS and D_PTS consecutive intervening points, respectively, that form an angle 
+ * such that angle < (PI - EPSILON) or angle > (PI + EPSILON).
+ * The second point is the vertex of the angle. If the first or last point 
+ * coincides with the vertex, the condition is not satisfied for that set.
+ * @return true if the condition is met, false otherwise.
+ */
+
+    private static boolean lic9() {
+        int cpts = Main.PARAMETERS.C_PTS;
+        int dpts = Main.PARAMETERS.D_PTS;
+        int np   = Main.NUMPOINTS;
+
+        if (np < 5) {
+            return false;
+        }
+
+        if (cpts < 1 || dpts < 1 || (cpts + dpts > np - 3)) {
+            return false;
+        }
+
+        double eps = Main.PARAMETERS.EPSILON;
+
+        for (int i = 0; i < np - cpts - dpts - 2; i++) {
+            int firstIdx  = i;
+            int middleIdx = i + cpts + 1;
+            int lastIdx   = middleIdx + dpts + 1;
+
+            double x1 = Main.X[firstIdx],  y1 = Main.Y[firstIdx];
+            double x2 = Main.X[middleIdx], y2 = Main.Y[middleIdx];
+            double x3 = Main.X[lastIdx],   y3 = Main.Y[lastIdx];
+
+            double angle = calculateAngle9(x1, y1, x2, y2, x3, y3);
+
+            if (angle < (Math.PI - eps) || angle > (Math.PI + eps)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+    * Calculates the angle (in radians) between three points where (x2, y2) is the vertex.
+    * @param x1, y1 Coordinates of the first point.
+    * @param x2, y2 Coordinates of the vertex point.
+    * @param x3, y3 Coordinates of the third point.
+    * @return The angle in radians between 0 and PI.
+    */
+    private static double calculateAngle9(double x1, double y1, double x2, double y2, double x3, double y3) {
+    double v1x = x1 - x2;
+    double v1y = y1 - y2;
+    double v2x = x3 - x2;
+    double v2y = y3 - y2;
+
+    double dotProduct = (v1x * v2x) + (v1y * v2y);
+    double mag1 = Math.sqrt(v1x * v1x + v1y * v1y);
+    double mag2 = Math.sqrt(v2x * v2x + v2y * v2y);
+
+    double cosTheta = dotProduct / (mag1 * mag2);
+
+    cosTheta = Math.max(-1.0, Math.min(1.0, cosTheta));
+
+    return Math.acos(cosTheta);
+
+    }
+  
     /**
      * Evaluates Launch Interceptor Condition (LIC) 10.
      * * <p>The condition is satisfied if there exists at least one set of three data points 
@@ -678,12 +677,200 @@ public class Cmv {
 
         return minRadius <= r + EPSILON;
     }
-
-
     
-    private static boolean lic11() { return false; }
-    private static boolean lic12() { return false; }
-    private static boolean lic13() { return false; }
+    /**
+     * There exists at least one set of two data points (X[i], Y[i]) and (X[j],
+     * Y[j]),
+     * separated by exactly G_PTS such that X[j] - X[i] < 0
+     *
+     * Condition not met when: NUMPOINTS < 3
+     * Condition met when: 1 <= G_PTS <= NUMPOINTS - 2
+     *
+     * @return true if condition met, false otherwise.
+     */
+    private static boolean lic11() {
+        if (Main.NUMPOINTS < 3) {
+            return false;
+        }
+
+        int g = Main.PARAMETERS.G_PTS;
+
+        if (g < 1 || g > Main.NUMPOINTS - 2) {
+            return false;
+        }
+
+        int step = g + 1;
+        for (int i = 0; i + step < Main.NUMPOINTS; i++) {
+            int j = i + step;
+            if (Main.X[j] < Main.X[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * There exists at least one set of two data points, separated by exactly K_PTS,
+     * which are more than LENGTH1 apart.
+     * Additionally, there exists at least one set of two data points, (same or
+     * different),
+     * separated by exactly K_PTS, which are less than LENGTH2 apart.
+     * 
+     * Condition not met when: NUMPOINTS < 3
+     * Condition met when: 0 <= LENGTH2
+     * 
+     * @return true if condition met, false otherwise.
+     */
+    private static boolean lic12() {
+        // Condition not met when NUMPOINTS < 3
+        if (Main.NUMPOINTS < 3) {
+            return false;
+        }
+
+        int k = Main.PARAMETERS.K_PTS;
+        double length1 = Main.PARAMETERS.LENGTH1;
+        double length2 = Main.PARAMETERS.LENGTH2;
+
+        // Parameter constraints
+        if (length2 < 0 || k < 1 || k > Main.NUMPOINTS - 2) {
+            return false;
+        }
+
+        int step = k + 1;
+
+        boolean foundGreaterThanL1 = false;
+        boolean foundLessThanL2 = false;
+
+        for (int i = 0; i + step < Main.NUMPOINTS; i++) {
+            int j = i + step;
+
+            double dx = Main.X[j] - Main.X[i];
+            double dy = Main.Y[j] - Main.Y[i];
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance > length1) {
+                foundGreaterThanL1 = true;
+            }
+            if (distance < length2) {
+                foundLessThanL2 = true;
+            }
+
+            // Exits when both conditions are met.
+            if (foundGreaterThanL1 && foundLessThanL2) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * There exists at least one set of three data points (X[i], Y[i]), (X[j],
+     * Y[j]), and (X[k], Y[k]), separated by exactly A_PTS and B_PTS, that cannot be
+     * contained within or on a circle of radius RADIUS1.
+     * Additionally, there exists at least one set of three data points (same or
+     * different) separated by exactly A_PTS and B_PTS that can be contained within or on a
+     * circle of radius RADIUS2.
+     *
+     * Condition not met when: NUMPOINTS < 5 or RADIUS < 0
+     * 
+     * @return true if condition met, false otherwise.
+     */
+    private static boolean lic13() {
+        if (Main.NUMPOINTS < 5) {
+            return false;
+        }
+
+        int a = Main.PARAMETERS.A_PTS;
+        int b = Main.PARAMETERS.B_PTS;
+
+        double r1 = Main.PARAMETERS.RADIUS1;
+        double r2 = Main.PARAMETERS.RADIUS2;
+
+        // Parameter constraints
+        if (a < 1 || b < 1) {
+            return false;
+        }
+        if (a + b < Main.NUMPOINTS - 3) {
+            return false;
+        }
+        if (r1 < 0 || r2 < 0) {
+            return false;
+        }
+
+        boolean cannotFitR1 = false;
+        boolean canFitR2 = false;
+
+        int step1 = a + 1;
+        int step2 = b + 1;
+
+        for (int i = 0; i + step1 + step2 < Main.NUMPOINTS; i++) {
+            int j = i + step1;
+            int k = j + step2;
+
+            double x1 = Main.X[i], y1 = Main.Y[i];
+            double x2 = Main.X[j], y2 = Main.Y[j];
+            double x3 = Main.X[k], y3 = Main.Y[k];
+
+            double required = minEnclosingCircleRadius(x1, y1, x2, y2, x3, y3);
+            if (required > r1) {
+                cannotFitR1 = true;
+            }
+            if (required <= r2) {
+                canFitR2 = true;
+            }
+
+            if (cannotFitR1 && canFitR2) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static double minEnclosingCircleRadius(double x1, double y1, double x2, double y2, double x3, double y3) {
+        // TOL = tolerance for floating point comparisons
+        final double TOL = 1e-12;
+
+        double a = dist(x2, y2, x3, y3);
+        double b = dist(x1, y1, x3, y3);
+        double c = dist(x1, y1, x2, y2);
+
+        // Check for collinearity using area of triangle
+        double dMax = Math.max(a, Math.max(b, c));
+
+        // Twice area using corss product
+        double cross = (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1);
+        double area2 = Math.abs(cross);
+
+        // Collinear (or very close to it): Radius is half the longest segment.
+        if (area2 < TOL) {
+            return dMax / 2.0;
+        }
+
+        // Check if triangle is right/obtuse:
+        // If c is longest side, then if c^2 >= a^2 + b^2,
+        // triangle is right/obtuse at opposite vertex.
+        // Sort sides so that L is largest, then compare L^2 >= S1^2 + S2^2
+        double[] s = new double[] { a, b, c };
+        java.util.Arrays.sort(s);
+        double S1 = s[0], S2 = s[1], L = s[2];
+
+        if (L * L >= S1 * S1 + S2 * S2 - TOL) {
+            return L / 2.0;
+        }
+
+        // Acute triangle: use circumradius formula
+        // R = abc / 4A , area2 = 2A => 4A = 2*area2
+        return (a * b * c) / (2.0 * area2);
+    }
+
+    private static double dist(double x1, double y1, double x2, double y2) {
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+  
     /**
     * Evaluates Launch Interceptor Condition (LIC) 14.
     * * Checks if there exists at least one set of three data points, separated by 
