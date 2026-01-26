@@ -579,6 +579,69 @@ public class Cmv {
              */
             if (!fitsInCircleRadius(x1, y1, x2, y2, x3, y3, r)) return true;
         }
+    
+   
+    /**
+     * Evaluates Launch Interceptor Condition (LIC) 10.
+     * * <p>The condition is satisfied if there exists at least one set of three data points 
+     * (P_i, P_j, P_k) separated by exactly E_PTS and F_PTS consecutive intervening points, 
+     * respectively, that form the vertices of a triangle with an area greater than AREA1.
+     * * <p>The condition is not met when NUMPOINTS < 5.
+     * * @return true if a triangle with area > AREA1 exists with the specified spacing, 
+     * false otherwise.
+     */
+    private static boolean lic10() { 
+        int num=Main.NUMPOINTS;
+        int epts= Main.PARAMETERS.E_PTS;
+        int fpts=Main.PARAMETERS.F_PTS;
+        double area1= Main.PARAMETERS.AREA1;
+        if(num<5){
+            return false;
+
+        }
+        if(1>epts || 1>fpts || epts+fpts>num-3){
+
+            return false;
+
+        }
+        
+        for(int i = 0; i <= num - epts - fpts - 3; i++){
+            
+        int firstIdx = i;
+        int middleIdx = i + epts + 1;
+        int lastIdx = middleIdx + fpts + 1;
+
+        double x1 = Main.X[firstIdx], y1 = Main.Y[firstIdx];
+        double x2 = Main.X[middleIdx], y2 = Main.Y[middleIdx];
+        double x3 = Main.X[lastIdx], y3 = Main.Y[lastIdx];
+
+        double area = calculateArea(x1, y1, x2, y2, x3, y3);
+
+        if (area > area1) {
+            return true;
+        }
+
+
+        }
+        
+        return false; 
+    
+    }
+    /**
+     * Calculates the area of a triangle formed by three points (x1, y1), (x2, y2), and (x3, y3).
+     * * <p>Uses the coordinate geometry formula (Shoelace formula) to compute the area:
+     * 0.5 * |x1(y2 - y3) + x2(y3 - y1) + x3(y1 - y2)|.
+     * @param x1 x-coordinate of the first vertex.
+     * @param y1 y-coordinate of the first vertex.
+     * @param x2 x-coordinate of the second vertex.
+     * @param y2 y-coordinate of the second vertex.
+     * @param x3 x-coordinate of the third vertex.
+     * @param y3 y-coordinate of the third vertex.
+     * @return The absolute area of the triangle.
+     */
+    private static double calculateArea(double x1, double y1, double x2, double y2, double x3, double y3) {
+    return 0.5 * Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
+}
         return false;
     }
 
@@ -642,7 +705,7 @@ public class Cmv {
     }
 
 
-    private static boolean lic10() { return false; }
+    
     private static boolean lic11() { return false; }
     private static boolean lic12() { return false; }
     private static boolean lic13() { return false; }

@@ -536,6 +536,65 @@ public class CMVTest {
     }
 
 
+    /**
+     * Tests that LIC 10 is true when a triangle with area > AREA1 exists.
+     * Points: P0(0,0), P2(2,0), P4(0,2) form a triangle with area 2.0.
+     * AREA1 is set to 1.0.
+     */
+    @Test
+    public void testLic10AreaIsGreater(){
+        
+        Main.NUMPOINTS = 5;
+        // P0=(0,0), P1=skip, P2=(2,0), P3=skip, P4=(0,2)
+        Main.X = new double[] { 0.0, 99.0, 2.0, 99.0, 0.0 };
+        Main.Y = new double[] { 0.0, 99.0, 0.0, 99.0, 2.0 };
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.E_PTS = 1;
+        Main.PARAMETERS.F_PTS = 1;
+        Main.PARAMETERS.AREA1 = 1.0; 
+
+        boolean[] cmv = Cmv.computeCMV();
+        // Area is 0.5 * |0(0-2) + 2(2-0) + 0(0-0)| = 2.0
+        assertTrue("LIC 10 should be true when area (2.0) > AREA1 (1.0)", cmv[10]);
+
+
+    }
+    /**
+     * Tests that LIC 10 is false when NUMPOINTS < 5.
+     */
+    @Test
+    public void lic10_false_whenNumPointsTooSmall() {
+        Main.NUMPOINTS = 4;
+        Main.X = new double[] { 0.0, 1.0, 2.0, 3.0 };
+        Main.Y = new double[] { 0.0, 0.0, 0.0, 0.0 };
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.E_PTS = 1;
+        Main.PARAMETERS.F_PTS = 1;
+        Main.PARAMETERS.AREA1 = 1.0;
+
+        boolean[] cmv = Cmv.computeCMV();
+        assertFalse("LIC 10 must be false if NUMPOINTS < 5", cmv[10]);
+    }
+    /**
+     * Tests that LIC 10 is false when points are collinear (area = 0).
+     */
+    @Test
+    public void lic10_false_whenPointsAreCollinear() {
+        Main.NUMPOINTS = 5;
+        // Three points on the X-axis: (0,0), (1,0), (2,0)
+        Main.X = new double[] { 0.0, 99.0, 1.0, 99.0, 2.0 };
+        Main.Y = new double[] { 0.0, 99.0, 0.0, 99.0, 0.0 };
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.E_PTS = 1;
+        Main.PARAMETERS.F_PTS = 1;
+        Main.PARAMETERS.AREA1 = 0.1;
+
+        boolean[] cmv = Cmv.computeCMV();
+        assertFalse("LIC 10 should be false for collinear points (area 0)", cmv[10]);
+    }
+
+
+
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(CMVTest.class);
         System.out.println(result.getFailures());
