@@ -614,7 +614,7 @@ public class CMVTest {
     @Test
     public void lic9_true_whenAngleIsSmallerThanLowerBounds(){
 
-
+    Main.PARAMETERS = new Main.Parameters();
     Main.NUMPOINTS = 5;
     Main.X = new double[] { 1.0, 99.0, 0.0, 99.0, 0.0 };
     Main.Y = new double[] { 0.0, 99.0, 0.0, 99.0, 1.0 };
@@ -650,7 +650,7 @@ public class CMVTest {
         Main.X = new double[] { 1.0, 99.0, 0.0, 99.0, -1.0 };
         Main.Y = new double[] { 0.0, 99.0, 0.0, 99.0, 0.0 };
 
-
+        Main.PARAMETERS = new Main.Parameters();
         Main.PARAMETERS.C_PTS = 1;
         Main.PARAMETERS.D_PTS = 1;
         Main.PARAMETERS.EPSILON = 0.01;
@@ -661,6 +661,61 @@ public class CMVTest {
         assertFalse("LIC 9 should be false when the angle is exactly PI", cmv[9]);
     }
 
+    /**
+     * Tests LIC 14 with a successful scenario.
+     * Sets up two different triangles:
+     * 1. A large triangle (Area > AREA1)
+     * 2. A small triangle (Area < AREA2)
+     * These triangles are formed by different sets of points.
+     */
+    @Test
+    public void testLIC14_Success() {
+        Main.NUMPOINTS = 6;
+        
+        Main.X = new double[]{0, 0, 10, 0, 0, 0.1};
+        Main.Y = new double[]{0, 0, 0, 0, 10, 0.1};
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.E_PTS = 1;
+        Main.PARAMETERS.F_PTS = 1;
+        Main.PARAMETERS.AREA1 = 40.0; 
+        Main.PARAMETERS.AREA2 = 1.0;  
+        
+        assertTrue( Cmv.computeCMV()[14]);
+    }
+    /**
+     * Tests LIC 14 failure when NUMPOINTS is less than 5.
+     * Even if area conditions are met, it should return false.
+     */
+    @Test
+    public void testLIC14_FailureLowNumPoints() {
+        Main.NUMPOINTS = 4;
+        Main.X = new double[]{0, 10, 0, 1};
+        Main.Y = new double[]{0, 0, 10, 1};
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.E_PTS = 1;
+        Main.PARAMETERS.F_PTS = 1;
+        
+        assertFalse( Cmv.computeCMV()[14]);
+    }
+
+    /**
+     * Tests LIC 14 failure when only one condition is met.
+     * In this case, AREA1 is exceeded, but no triangle is smaller than AREA2.
+     */
+    @Test
+    public void testLIC14_FailureOnlyOneCondition() {
+        Main.NUMPOINTS = 5;
+        
+        Main.X = new double[]{0, 0, 10, 0, 10};
+        Main.Y = new double[]{0, 0, 0, 0, 10};
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.E_PTS = 1;
+        Main.PARAMETERS.F_PTS = 1;
+        Main.PARAMETERS.AREA1 = 1.0; 
+        Main.PARAMETERS.AREA2 = 0.00000001; 
+        
+        assertFalse( Cmv.computeCMV()[14]);
+    }
 
 }
 
