@@ -684,14 +684,52 @@ public class Cmv {
     private static boolean lic11() { return false; }
     private static boolean lic12() { return false; }
     private static boolean lic13() { return false; }
+    /**
+    * Evaluates Launch Interceptor Condition (LIC) 14.
+    * * Checks if there exists at least one set of three data points, separated by 
+    * E_PTS and F_PTS consecutive intervening points, that form a triangle with 
+    * an area greater than AREA1. 
+    * * Additionally, checks if there exists a set of three data points (which can 
+    * be the same or different from the first set) with the same E_PTS and F_PTS 
+    * separation that form a triangle with an area less than AREA2.
+    * * The condition is only met if both a "large" triangle and a "small" triangle 
+    * are found. 
+    * * @return true if both area conditions are satisfied and NUMPOINTS >= 5; 
+    * false otherwise.
+    */
     private static boolean lic14() {
         int num=Main.NUMPOINTS;
+        int epts = Main.PARAMETERS.E_PTS;
+        int fpts = Main.PARAMETERS.F_PTS;
+        double area1 = Main.PARAMETERS.AREA1;
         double area2 = Main.PARAMETERS.AREA2;
+        boolean first=false;
+        boolean second=false;
+
         if(num<5 || 0> area2){
-
-
+                return false;
         }
         
+        for (int i = 0; i <= num - epts - fpts - 3; i++) {
+            int firstIdx = i;
+            int middleIdx = i + epts + 1;
+            int lastIdx = middleIdx + fpts + 1;
+
+            double area = calculateArea(Main.X[firstIdx], Main.Y[firstIdx], 
+                                        Main.X[middleIdx], Main.Y[middleIdx], 
+                                        Main.X[lastIdx], Main.Y[lastIdx]);
+            if (area > area1) {
+                first = true;
+            };
+            if(area < area2){
+                second = true;
+            }
+        }
+
+        if(first & second){
+            return true;
+        }
+
         
         return false; }
 }
