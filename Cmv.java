@@ -684,5 +684,14 @@ public class Cmv {
     private static boolean lic11() { return false; }
     private static boolean lic12() { return false; }
     private static boolean lic13() { return false; }
-    private static boolean lic14() { return false; }
+    private static boolean lic14() {
+        int num=Main.NUMPOINTS;
+        double area2 = Main.PARAMETERS.AREA2;
+        if(num<5 || 0> area2){
+
+
+        }
+        
+        
+        return false; }
 }
