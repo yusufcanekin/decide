@@ -547,7 +547,7 @@ public class Cmv {
      *
      * @return true if LIC8 is satisfied, otherwise false.
      */
-    private static boolean lic8() {
+        private static boolean lic8() {
         int n = Main.NUMPOINTS;
         if (n < 5) return false;
 
@@ -555,11 +555,6 @@ public class Cmv {
         int bPts = Main.PARAMETERS.B_PTS;
         double r  = Main.PARAMETERS.RADIUS1;
 
-        /**
-         * Defensive checks for invalid A_PTS / B_PTS values.
-                /**
-         * Defensive checks for invalid A_PTS / B_PTS values.
-         */
         if (aPts < 1 || bPts < 1) return false;
 
         int offset2 = aPts + 1;
@@ -573,14 +568,10 @@ public class Cmv {
             double x2 = Main.X[j], y2 = Main.Y[j];
             double x3 = Main.X[k], y3 = Main.Y[k];
 
-            /**
-             * If the minimal enclosing circle radius is greater than RADIUS1,
-             * then the three points cannot be contained -> LIC8 is satisfied.
-             */
             if (!fitsInCircleRadius(x1, y1, x2, y2, x3, y3, r)) return true;
         }
-    
-   
+        return false;
+    }
     /**
      * Evaluates Launch Interceptor Condition (LIC) 10.
      * * <p>The condition is satisfied if there exists at least one set of three data points 
@@ -591,41 +582,26 @@ public class Cmv {
      * false otherwise.
      */
     private static boolean lic10() { 
-        int num=Main.NUMPOINTS;
-        int epts= Main.PARAMETERS.E_PTS;
-        int fpts=Main.PARAMETERS.F_PTS;
-        double area1= Main.PARAMETERS.AREA1;
-        if(num<5){
+        int num = Main.NUMPOINTS;
+        int epts = Main.PARAMETERS.E_PTS;
+        int fpts = Main.PARAMETERS.F_PTS;
+        double area1 = Main.PARAMETERS.AREA1;
+
+        if (num < 5 || epts < 1 || fpts < 1 || (epts + fpts > num - 3)) {
             return false;
-
-        }
-        if(1>epts || 1>fpts || epts+fpts>num-3){
-
-            return false;
-
         }
         
-        for(int i = 0; i <= num - epts - fpts - 3; i++){
-            
-        int firstIdx = i;
-        int middleIdx = i + epts + 1;
-        int lastIdx = middleIdx + fpts + 1;
+        for (int i = 0; i <= num - epts - fpts - 3; i++) {
+            int firstIdx = i;
+            int middleIdx = i + epts + 1;
+            int lastIdx = middleIdx + fpts + 1;
 
-        double x1 = Main.X[firstIdx], y1 = Main.Y[firstIdx];
-        double x2 = Main.X[middleIdx], y2 = Main.Y[middleIdx];
-        double x3 = Main.X[lastIdx], y3 = Main.Y[lastIdx];
-
-        double area = calculateArea(x1, y1, x2, y2, x3, y3);
-
-        if (area > area1) {
-            return true;
+            double area = calculateArea(Main.X[firstIdx], Main.Y[firstIdx], 
+                                        Main.X[middleIdx], Main.Y[middleIdx], 
+                                        Main.X[lastIdx], Main.Y[lastIdx]);
+            if (area > area1) return true;
         }
-
-
-        }
-        
         return false; 
-    
     }
     /**
      * Calculates the area of a triangle formed by three points (x1, y1), (x2, y2), and (x3, y3).
@@ -639,10 +615,9 @@ public class Cmv {
      * @param y3 y-coordinate of the third vertex.
      * @return The absolute area of the triangle.
      */
+
     private static double calculateArea(double x1, double y1, double x2, double y2, double x3, double y3) {
-    return 0.5 * Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
-}
-        return false;
+        return 0.5 * Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
     }
 
     // ==================== Helper functions (for LIC6–LIC8) ====================
