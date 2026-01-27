@@ -44,14 +44,14 @@ public class Cmv {
      private static boolean lic0()  { 
         /**
          * There exists at least one pair of consecutive points data points
-         * whose distance is greater than LENTGH1, apart
+         * whose distance is greater than LENGTH1, apart
          * 
          * Condition met when: 
-         * - LENGTH ispositive
+         * - LENGTH is positive
          * - There are at least one set of two points
          * 
          * Condition not when:
-         * - LENGTH is less or equal to zero
+         * - LENGTH1 is less or equal to zero
          * - There are less than one set of two points
          * - All distances between consecutive points are less than 
          *   or equal to LENGTH1 
