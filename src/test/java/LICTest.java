@@ -3,10 +3,10 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import static org.junit.Assert.*;
 
-public class CMVTest {
+public class LICTest {
 
     public static void main(String[] args) {
-        Result result = JUnitCore.runClasses(CMVTest.class);
+        Result result = JUnitCore.runClasses(LICTest.class);
         System.out.println(result.getFailures());
     }
     
