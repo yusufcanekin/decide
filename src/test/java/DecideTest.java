@@ -63,6 +63,14 @@ public class DecideTest {
         assertTrue(Main.LAUNCH);
     }
 
+    /**
+     * Asserts true for:
+     * - CMV is true for all i
+     * - LCM is ORR for all i,j --> PUM is true for all i != j
+     * - PUV is true for all i --> all rows checked in FUV
+     * - Since PUM is true for all i != j, FUV is true for all i
+     * - Therefore final LAUNCH decision is true.
+     */
     @Test
     public void decide_true_whenExpectedToBeTrueAndPUVAllTrue() {
         Main.NUMPOINTS = 5;
@@ -131,6 +139,14 @@ public class DecideTest {
         assertTrue(Main.LAUNCH);
     }
 
+    /**
+     * Asserts false for:
+     * - CMV is false for all i
+     * - LCM is ANDD for all i,j --> PUM is false for all i != j
+     * - PUV is true for all i --> All rows checked in FUV
+     * - Since PUM is false for all i != j, FUV is false for all i
+     * - Therefore final LAUNCH decision is false.
+     */
     @Test
     public void decide_falseWhenExpectedToBeFalse() {
         Main.NUMPOINTS = 2;
@@ -173,6 +189,9 @@ public class DecideTest {
         assertFalse(Main.LAUNCH);
     }
 
+    /**
+     * Helper function to print the PUM matrix for debugging.
+     */
     private static void printPUM(boolean[][] pum) {
         System.out.println("PUM matrix:");
         System.out.print("      ");
