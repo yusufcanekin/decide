@@ -59,6 +59,13 @@ public class Main {
         CMV = Cmv.computeCMV();
         PUM = Pum.computePUM();
         FUV = Fuv.computeFUV();
-        LAUNCH = false; // placeholder
+
+        LAUNCH = true;
+        for (int i = 0; i < 15; i++) {
+            if (!FUV[i]) {
+                LAUNCH = false;
+                break;
+            }
+        }
     }
 }
