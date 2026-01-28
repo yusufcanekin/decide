@@ -1,12 +1,12 @@
 public class Main {
     // Input Variables
-    public static int NUMPOINTS;
-    public static double[] X;
-    public static double[] Y;
+    public static int NUMPOINTS = 5;
+    public static double[] X = new double[] {0.0, 1.0, 2.0, 4.0, -1.0};
+    public static double[] Y = new double[] {0.0, 1.0, 2.0, 0.0, 0.0};
 
     public static Parameters PARAMETERS;
-    public static Connector[][] LCM;
-    public static boolean[] PUV;
+    public static Connector[][] LCM  = new Connector[15][15];
+    public static boolean[] PUV = new boolean[15];
 
     // Intermediate / Output
     public static boolean[] CMV;
@@ -23,33 +23,42 @@ public class Main {
 
     // PARAMETERS struct
     public static class Parameters {
-        public double LENGTH1;
-        public double RADIUS1;
-        public double EPSILON;
-        public double AREA1;
+        public double LENGTH1 = 0.5;
+        public double RADIUS1 = 0.5;
+        public double EPSILON = 1.0;
+        public double AREA1 = 0.5;
         public final double PI =  3.1415926535;
 
-        public int Q_PTS;
-        public int QUADS;
+        public int Q_PTS = 4;
+        public int QUADS = 1;
 
-        public double DIST;
-        public int N_PTS;
+        public double DIST = 0.5;
+        public int N_PTS = 3;
 
-        public int K_PTS;
-        public int A_PTS;
-        public int B_PTS;
-        public int C_PTS;
-        public int D_PTS;
-        public int E_PTS;
-        public int F_PTS;
-        public int G_PTS;
+        public int K_PTS = 1;
+        public int A_PTS = 1;
+        public int B_PTS = 1;
+        public int C_PTS = 1;
+        public int D_PTS = 1;
+        public int E_PTS = 1;
+        public int F_PTS = 1;
+        public int G_PTS = 1;
 
-        public double LENGTH2;
-        public double RADIUS2;
-        public double AREA2;
+        public double LENGTH2 = 3.0;
+        public double RADIUS2 = 5.0;
+        public double AREA2 = 5.0;
     }
 
     public static void main(String[] args) {
+        for (int i = 0; i < 15; i++) {
+            for(int j = 0; j < 15; j++) {
+                Main.LCM[i][j] = Main.Connector.NOTUSED;
+            }
+        }
+
+        for (int i = 0; i < 15; i++) {
+             Main.PUV[i] = false;
+        }
         decide();
         System.out.println(LAUNCH ? "YES" : "NO");
     }
