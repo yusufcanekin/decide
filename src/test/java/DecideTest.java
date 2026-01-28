@@ -41,8 +41,35 @@ public class DecideTest {
 
         Main.decide();
 
-        assertFalse(Main.LAUNCH);
+        assertTrue(Main.LAUNCH);
     }
+
+    /**
+     * Asserts false for:
+     * - At least one LIC is enabled in PUV
+     * - decide() runs CMV -> PUM ->FUV
+     * - LAUNCH decisiion is false
+     */
+    @Test
+    public void decide_false_whenAtLeastOnePUVTrue() {
+        // NUMPOINTS + points
+        Main.NUMPOINTS = 3;
+        Main.X = new double[] {0.0, 1.0, 2.0};
+        Main.Y = new double[] {0.0, 0.0, 0.0};
+
+        Main.PARAMETERS = new Main.Parameters();
+
+        // LCM provided
+        Main.LCM = makeLCM(Main.Connector.NOTUSED);
+
+        // Enable one LIC (index choice irrelevant for this test)
+        Main.PUV = new boolean[15];
+        Main.PUV[0] = true;
+
+        Main.decide();
+        
+        assertFalse(Main.LAUNCH);
+        }
 
     /**
      * Asserts false for:
