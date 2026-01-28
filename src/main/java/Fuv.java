@@ -18,6 +18,9 @@ public class Fuv {
             // set true if all elements in PUM row i are true
             boolean isValid = true;
             for (int j = 0; j < 15; j++) {
+                if (i == j) {
+                    continue; // Skip diagonal elements.
+                }
                 if (!Main.PUM[i][j]) {
                     isValid = false;
                     break;

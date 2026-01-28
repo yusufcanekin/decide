@@ -49,6 +49,11 @@ public class Main {
         public double AREA2 = 5.0;
     }
 
+    /**
+     * Main method to run the DECIDE program.
+     * Calls on decide and prints final LAUNCH decision.
+     * @param args
+     */
     public static void main(String[] args) {
         for (int i = 0; i < 15; i++) {
             for(int j = 0; j < 15; j++) {
@@ -68,6 +73,15 @@ public class Main {
         CMV = Cmv.computeCMV();
         PUM = Pum.computePUM();
         FUV = Fuv.computeFUV();
-        LAUNCH = false; // placeholder
+
+        LAUNCH = true;
+        // Final decision is based on FUV.
+        // If any FUV[i] is false, LAUNCH is false.
+        for (int i = 0; i < 15; i++) {
+            if (!FUV[i]) {
+                LAUNCH = false;
+                break;
+            }
+        }
     }
 }
