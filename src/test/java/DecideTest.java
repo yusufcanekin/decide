@@ -44,6 +44,11 @@ public class DecideTest {
         assertFalse(Main.LAUNCH);
     }
 
+    /**
+     * Asserts false for:
+     * - At least one FUV value is false
+     * - Therefore final LAUNCH decision is false
+     */
     @Test
     public void decide_false_whenAnyFUVFalse() {
         // Points such that CMV[0] becomes false
