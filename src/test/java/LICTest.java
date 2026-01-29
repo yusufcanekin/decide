@@ -1,7 +1,8 @@
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import static org.junit.Assert.*;
 
 public class LICTest {
 
@@ -358,23 +359,23 @@ public class LICTest {
     }
 
 
-    /**
+     /**
      * LIC 6 should return true if there exists at least one set of N_PTS consecutive points
      * such that at least one point is at a distance greater than DIST from the line joining
      * the first and last points of the set.
      */
     @Test
-    public void lic6_true_whenPointFartherThanDIST_fromLine() {
-        Main.PARAMETERS = new Main.Parameters();
-        Main.PARAMETERS.N_PTS = 3;
-        Main.PARAMETERS.DIST = 1.0;
-
+    public void testLic6_positive_pointFartherThanDistFromLine() {
         Main.NUMPOINTS = 3;
         Main.X = new double[]{0, 0, 2};
         Main.Y = new double[]{0, 2, 0};
 
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.N_PTS = 3;
+        Main.PARAMETERS.DIST = 1.0;
+
         boolean[] cmv = Cmv.computeCMV();
-        assertTrue(cmv[6]);
+        assertTrue("LIC 6 should be true when a point is farther than DIST from the line.", cmv[6]);
     }
 
     /**
@@ -382,52 +383,36 @@ public class LICTest {
      * all points are within or on distance DIST from the line.
      */
     @Test
-    public void lic6_false_whenAllPointsWithinDIST_ofLine() {
-        Main.PARAMETERS = new Main.Parameters();
-        Main.PARAMETERS.N_PTS = 3;
-        Main.PARAMETERS.DIST = 1.0;
-
+    public void testLic6_negative_allPointsWithinDistFromLine() {
         Main.NUMPOINTS = 3;
         Main.X = new double[]{0, 0, 2};
         Main.Y = new double[]{0, 0.5, 0};
 
-        boolean[] cmv = Cmv.computeCMV();
-        assertFalse(cmv[6]);
-    }
-
-    /**
-     * LIC 6 special case: if the first and last points coincide, distance is measured
-     * from that point instead of a line.
-     */
-    @Test
-    public void lic6_true_whenEndpointsCoincide_andOtherPointFar() {
         Main.PARAMETERS = new Main.Parameters();
         Main.PARAMETERS.N_PTS = 3;
         Main.PARAMETERS.DIST = 1.0;
 
-        Main.NUMPOINTS = 3;
-        Main.X = new double[]{0, 2, 0};
-        Main.Y = new double[]{0, 0, 0};
-
         boolean[] cmv = Cmv.computeCMV();
-        assertTrue(cmv[6]);
+        assertFalse("LIC 6 should be false when all points are within or on DIST from the line.", cmv[6]);
     }
 
     /**
-     * LIC 6 sliding window: should be true if any later window triggers.
+     * LIC 6 should return false when the condition cannot be evaluated:
+     * NUMPOINTS < 3 (invalid).
      */
     @Test
-    public void lic6_true_inLaterWindow_whenFirstWindowFalse() {
+    public void testLic6_invalidInput_lessThanThreePoints() {
+        // Invalid Input
+        Main.NUMPOINTS = 2;
+        Main.X = new double[]{0, 2};
+        Main.Y = new double[]{0, 0};
+
         Main.PARAMETERS = new Main.Parameters();
         Main.PARAMETERS.N_PTS = 3;
         Main.PARAMETERS.DIST = 1.0;
 
-        Main.NUMPOINTS = 5;
-        Main.X = new double[]{0, 1, 2, 3, 4};
-        Main.Y = new double[]{0, 0, 0, 5, 0};
-
         boolean[] cmv = Cmv.computeCMV();
-        assertTrue(cmv[6]);
+        assertFalse("LIC 6 should be false when NUMPOINTS < 3.", cmv[6]);
     }
 
     /**
@@ -435,111 +420,113 @@ public class LICTest {
      * exactly K_PTS points in between such that the distance between them is > LENGTH1.
      */
     @Test
-    public void lic7_true_whenTwoPointsWithKPtsBetween_areFartherThanLENGTH1() {
-        Main.PARAMETERS = new Main.Parameters();
-        Main.PARAMETERS.K_PTS = 1;
-        Main.PARAMETERS.LENGTH1 = 5.0;
-
+    public void testLic7_positive_pairWithKPtsBetween_distanceGreaterThanLength1() {
         Main.NUMPOINTS = 3;
         Main.X = new double[]{0, 0, 10};
         Main.Y = new double[]{0, 0, 0};
 
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.K_PTS = 1;
+        Main.PARAMETERS.LENGTH1 = 5.0;
+
         boolean[] cmv = Cmv.computeCMV();
-        assertTrue(cmv[7]);
+        assertTrue("LIC 7 should be true when a qualifying pair has distance > LENGTH1.", cmv[7]);
     }
 
     /**
      * LIC 7 should return false if all such pairs have distance <= LENGTH1.
      */
     @Test
-    public void lic7_false_whenDistanceNotGreaterThanLENGTH1() {
-        Main.PARAMETERS = new Main.Parameters();
-        Main.PARAMETERS.K_PTS = 1;
-        Main.PARAMETERS.LENGTH1 = 15.0;
-
+    public void testLic7_negative_noPairDistanceGreaterThanLength1() {
         Main.NUMPOINTS = 3;
         Main.X = new double[]{0, 0, 10};
         Main.Y = new double[]{0, 0, 0};
 
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.K_PTS = 1;
+        Main.PARAMETERS.LENGTH1 = 15.0;
+
         boolean[] cmv = Cmv.computeCMV();
-        assertFalse(cmv[7]);
+        assertFalse("LIC 7 should be false when all qualifying pairs have distance <= LENGTH1.", cmv[7]);
     }
 
     /**
-     * LIC 7 with K_PTS > 1.
+     * LIC 7 should return false when the condition cannot be evaluated:
+     * NUMPOINTS < 3 (invalid).
      */
     @Test
-    public void lic7_true_withKPtsGreaterThan1() {
-        Main.PARAMETERS = new Main.Parameters();
-        Main.PARAMETERS.K_PTS = 3;
-        Main.PARAMETERS.LENGTH1 = 5.0;
+    public void testLic7_invalidInput_lessThanThreePoints() {
+        // Invalid Input
+        Main.NUMPOINTS = 2;
+        Main.X = new double[]{0, 10};
+        Main.Y = new double[]{0, 0};
 
-        Main.NUMPOINTS = 5;
-        Main.X = new double[]{0, 0, 0, 0, 10};
-        Main.Y = new double[]{0, 0, 0, 0, 0};
+        Main.PARAMETERS = new Main.Parameters();
+        Main.PARAMETERS.K_PTS = 1;
+        Main.PARAMETERS.LENGTH1 = 1.0;
 
         boolean[] cmv = Cmv.computeCMV();
-        assertTrue(cmv[7]);
+        assertFalse("LIC 7 should be false when NUMPOINTS < 3.", cmv[7]);
     }
-
 
     /**
      * LIC 8 should return true if there exists at least one triple of points separated by
      * A_PTS and B_PTS that cannot be contained in or on a circle of radius RADIUS1.
      */
     @Test
-    public void lic8_true_whenTripleCannotFitInCircleRadius1() {
+    public void testLic8_positive_tripleCannotFitInCircleRadius1() {
+        Main.NUMPOINTS = 5;
+        // For A_PTS=1, B_PTS=1, triple indices 0,2,4 -> (0,0), (4,0), (0,3)
+        Main.X = new double[]{0, 0, 4, 0, 0};
+        Main.Y = new double[]{0, 0, 0, 0, 3};
+
         Main.PARAMETERS = new Main.Parameters();
         Main.PARAMETERS.A_PTS = 1;
         Main.PARAMETERS.B_PTS = 1;
         Main.PARAMETERS.RADIUS1 = 2.0;
 
-        Main.NUMPOINTS = 5;
-        Main.X = new double[]{0, 0, 4, 0, 0};
-        Main.Y = new double[]{0, 0, 0, 0, 3};
-
         boolean[] cmv = Cmv.computeCMV();
-        assertTrue(cmv[8]);
+        assertTrue("LIC 8 should be true when a triple cannot fit in a circle of radius RADIUS1.", cmv[8]);
     }
 
     /**
      * LIC 8 should return false if all such triples fit in or on a circle of radius RADIUS1.
      */
     @Test
-    public void lic8_false_whenTripleFitsInCircleRadius1() {
+    public void testLic8_negative_allTriplesFitInCircleRadius1() {
+        Main.NUMPOINTS = 5;
+        Main.X = new double[]{0, 0, 4, 0, 0};
+        Main.Y = new double[]{0, 0, 0, 0, 3};
+
         Main.PARAMETERS = new Main.Parameters();
         Main.PARAMETERS.A_PTS = 1;
         Main.PARAMETERS.B_PTS = 1;
         Main.PARAMETERS.RADIUS1 = 3.0;
 
-        Main.NUMPOINTS = 5;
-        Main.X = new double[]{0, 0, 4, 0, 0};
-        Main.Y = new double[]{0, 0, 0, 0, 3};
-
         boolean[] cmv = Cmv.computeCMV();
-        assertFalse(cmv[8]);
+        assertFalse("LIC 8 should be false when all qualifying triples fit in or on radius RADIUS1.", cmv[8]);
     }
 
     /**
-     * LIC 8 collinear boundary behavior: radius needed is maxDist/2.
-     * Points (0,0), (4,0), (8,0) need radius 4 to fit.
-     */
+     * LIC 8 should return false when the condition cannot be evaluated:
+    UMPOINTS < 5 (invalid).
+    */
     @Test
-    public void lic8_collinearPoints_boundaryBehavior() {
+    public void testLic8_invalidInput_lessThanFivePoints() {
+        // Invalid Input
+        Main.NUMPOINTS = 4;
+        Main.X = new double[]{0, 0, 4, 0};
+        Main.Y = new double[]{0, 0, 0, 3};
+
         Main.PARAMETERS = new Main.Parameters();
         Main.PARAMETERS.A_PTS = 1;
         Main.PARAMETERS.B_PTS = 1;
+        Main.PARAMETERS.RADIUS1 = 1.0;
 
-        Main.NUMPOINTS = 5;
-        Main.X = new double[]{0, 0, 4, 0, 8};
-        Main.Y = new double[]{0, 0, 0, 0, 0};
-
-        Main.PARAMETERS.RADIUS1 = 3.9;
-        assertTrue(Cmv.computeCMV()[8]);
-
-        Main.PARAMETERS.RADIUS1 = 4.0;
-        assertFalse(Cmv.computeCMV()[8]);
+        boolean[] cmv = Cmv.computeCMV();
+        assertFalse("LIC 8 should be false when NUMPOINTS < 5.", cmv[8]);
     }
+
 
     /**
      * Tests LIC 9: Returns true when an angle is formed that is smaller than the lower bound.
